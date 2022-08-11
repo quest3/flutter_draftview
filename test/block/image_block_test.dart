@@ -1,4 +1,4 @@
-import 'package:draft_view/draft_view/block/blocks/image_block.dart';
+import 'package:draft_view/draft_view/blocks/image_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

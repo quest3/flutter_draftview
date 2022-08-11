@@ -1,5 +1,4 @@
 import 'package:draft_view/draft_view.dart';
-import 'package:draft_view/draft_view/block/draft_object.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../test_data.dart';

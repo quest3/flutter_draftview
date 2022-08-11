@@ -1,4 +1,4 @@
-import 'package:draft_view/draft_view/block/base_block.dart';
+import 'package:draft_view/draft_view/blocks/blocks.dart' show BaseBlock;
 
 abstract class BasePlugin {
   /// Block renderer map

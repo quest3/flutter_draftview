@@ -1,14 +1,15 @@
-import 'package:draft_view/draft_view/block/blocks/image_block.dart';
-import 'package:draft_view/draft_view/block/callbacks.dart';
-import 'package:draft_view/draft_view/plugin/base_plugin.dart';
+import 'package:draft_view/draft_view/blocks/blocks.dart'
+    show LinkBlock, OnTap, OnDoubleTap, OnLongPress, ActionBuilder;
 
-class ImagePlugin extends BasePlugin {
+import 'base_plugin.dart';
+
+class LinkPlugin extends BasePlugin {
   final OnTap? onTap;
   final OnDoubleTap? onDoubleTap;
   final OnLongPress? onLongPress;
   final ActionBuilder? actionBuilder;
 
-  ImagePlugin({
+  LinkPlugin({
     this.onDoubleTap,
     this.onLongPress,
     this.onTap,
@@ -17,7 +18,7 @@ class ImagePlugin extends BasePlugin {
 
   @override
   get entityRenderFn => {
-        "image": ImageBlock(
+        "LINK": LinkBlock(
           depth: 0,
           blockType: '',
           data: {},
@@ -26,6 +27,7 @@ class ImagePlugin extends BasePlugin {
           inlineStyles: [],
           start: 0,
           text: '',
+          children: [],
           onTap: onTap,
           onDoubleTap: onDoubleTap,
           onLongPress: onLongPress,

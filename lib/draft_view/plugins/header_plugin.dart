@@ -1,6 +1,7 @@
-import 'package:draft_view/draft_view/block/base_block.dart';
-import 'package:draft_view/draft_view/block/blocks/header_block.dart';
-import 'package:draft_view/draft_view/plugin/base_plugin.dart';
+import 'package:draft_view/draft_view/blocks/blocks.dart'
+    show BaseBlock, HeaderBlock;
+
+import 'base_plugin.dart';
 
 class HeaderPlugin extends BasePlugin {
   @override

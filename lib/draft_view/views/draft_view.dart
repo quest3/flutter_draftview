@@ -1,7 +1,8 @@
-import 'package:draft_view/draft_view/block/base_block.dart';
-import 'package:draft_view/draft_view/converter/converter.dart';
-import 'package:draft_view/draft_view/plugin/base_plugin.dart';
 import 'package:flutter/material.dart';
+
+import '../blocks/blocks.dart' show BaseBlock;
+import '../converter/converter.dart' show Converter;
+import '../plugins/plugins.dart' show BasePlugin;
 
 class DraftView extends StatefulWidget {
   final Map<String, dynamic> rawDraftData;

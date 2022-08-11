@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:draft_view/draft_view/block/base_block.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import 'base_block.dart';
 
 // To parse this JSON data, do
 //
@@ -128,10 +129,10 @@ class _DetailSettings {
 
 /// Post setting's block. This block will be used to render the keyword (like a hashtag ) in blog.
 /// For example [iPhone] is a post setting's block
-class PostSettingsBlock extends BaseBlock {
+class SettingsBlock extends BaseBlock {
   final Settings settings;
 
-  PostSettingsBlock({
+  SettingsBlock({
     required int depth,
     required int start,
     required int end,
@@ -152,7 +153,7 @@ class PostSettingsBlock extends BaseBlock {
           blockType: blockType,
         );
 
-  PostSettingsBlock copyWith({BaseBlock? block}) => PostSettingsBlock(
+  SettingsBlock copyWith({BaseBlock? block}) => SettingsBlock(
         depth: block?.depth ?? this.depth,
         start: block?.start ?? this.start,
         end: block?.end ?? this.end,

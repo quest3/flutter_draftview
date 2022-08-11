@@ -1,4 +1,4 @@
-var data2 = {
+const Map<String, dynamic> data2 = {
   "blocks": [
     {
       "key": "99gfe",

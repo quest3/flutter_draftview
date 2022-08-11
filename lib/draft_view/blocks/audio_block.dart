@@ -1,7 +1,8 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:draft_view/draft_view/block/base_block.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import 'base_block.dart';
 
 extension on Duration {
   String toAudioString() {

@@ -1,8 +1,6 @@
 import 'package:draft_view/draft_view.dart';
-import 'package:example/draft_data.dart';
-import 'package:example/draft_data2.dart';
 import 'package:example/draft_data3.dart';
-import 'package:example/post_settings_data.dart';
+import 'package:example/settings_data.dart';
 import 'package:flutter/material.dart';
 
 class Demo3 extends StatelessWidget {
@@ -30,7 +28,7 @@ class Demo3 extends StatelessWidget {
                   BlockQuotePlugin(),
                   HeaderPlugin(),
                   ImagePlugin(),
-                  PostSettingsPlugin(rawSettings: settings),
+                  SettingsPlugin(rawSettings: settings),
                   ListPlugin(),
                   AudioPlugin(),
                 ],

@@ -1,8 +1,10 @@
-import 'package:draft_view/draft_view/block/base_block.dart';
-import 'package:draft_view/draft_view/block/blocks/list_block.dart';
-import 'package:draft_view/draft_view/block/blocks/text_block.dart';
-import 'package:draft_view/draft_view/block/draft_object.dart';
-import 'package:draft_view/draft_view/plugin/base_plugin.dart';
+import 'package:draft_view/draft_view/blocks/blocks.dart'
+    show BaseBlock, ListBlock, NewlineBlock;
+import 'package:draft_view/draft_view/plugins/plugins.dart' show BasePlugin;
+
+import 'draft_object.dart';
+
+export 'draft_object.dart';
 
 class Converter {
   List<BasePlugin> plugins;

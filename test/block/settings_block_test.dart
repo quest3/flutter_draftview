@@ -1,4 +1,4 @@
-import 'package:draft_view/draft_view/block/blocks/settings_block.dart';
+import 'package:draft_view/draft_view/blocks/settings_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -30,7 +30,7 @@ void main() {
     };
 
     test("Simple test1", () async {
-      var block = PostSettingsBlock(
+      var block = SettingsBlock(
         depth: 1,
         start: 0,
         end: 5,
@@ -46,7 +46,7 @@ void main() {
       expect(textSpan.toPlainText().contains("abcde"), true);
     });
     testWidgets("Simple test2", (tester) async {
-      var block = PostSettingsBlock(
+      var block = SettingsBlock(
         depth: 1,
         start: 0,
         end: 5,

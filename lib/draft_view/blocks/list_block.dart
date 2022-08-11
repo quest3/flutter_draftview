@@ -1,8 +1,16 @@
-import 'package:draft_view/draft_view/block/base_block.dart';
 import 'package:flutter/material.dart';
 
-class TextBlock extends BaseBlock {
-  TextBlock({
+import 'base_block.dart';
+
+class ListBlock extends BaseBlock {
+  /// List block's style
+  final bool isOrderedList;
+
+  /// Current order of the list. Ex: 1.; 2.; 3.;
+  final int order;
+
+  ListBlock({
+    required this.order,
     required int depth,
     required int start,
     required int end,
@@ -11,6 +19,7 @@ class TextBlock extends BaseBlock {
     required String text,
     required List<String> entityTypes,
     required String blockType,
+    required this.isOrderedList,
   }) : super(
           depth: depth,
           start: start,
@@ -22,7 +31,7 @@ class TextBlock extends BaseBlock {
           blockType: blockType,
         );
 
-  TextBlock copyWith({BaseBlock? block}) => TextBlock(
+  ListBlock copyWith({BaseBlock? block}) => ListBlock(
         depth: block?.depth ?? this.depth,
         start: block?.start ?? this.start,
         end: block?.end ?? this.end,
@@ -31,24 +40,26 @@ class TextBlock extends BaseBlock {
         data: block?.data ?? this.data,
         text: block?.text ?? this.text,
         blockType: block?.blockType ?? this.blockType,
+        isOrderedList: this.isOrderedList,
+        order: this.order,
       );
-}
 
-class NewlineBlock extends BaseBlock {
-  NewlineBlock()
-      : super(
-          depth: 0,
-          start: 0,
-          end: 0,
-          inlineStyles: [],
-          data: {},
-          text: "",
-          entityTypes: [],
-          blockType: "newline",
-        );
+  String getDepthSpacing() {
+    String spacing = "";
+    int i = 1;
+    while (i < depth) {
+      spacing += '      ';
+      i += 1;
+    }
+    return spacing;
+  }
 
   @override
   InlineSpan render(BuildContext context, {List<InlineSpan>? children}) {
-    return TextSpan(text: "\n\n", style: renderStyle(context));
+    return TextSpan(
+      text:
+          "${getDepthSpacing()}${isOrderedList ? "$order." : "-"} $textContent\n",
+      style: renderStyle(context),
+    );
   }
 }

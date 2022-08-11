@@ -1,15 +1,9 @@
-import 'package:draft_view/draft_view/block/base_block.dart';
 import 'package:flutter/material.dart';
 
-class ListBlock extends BaseBlock {
-  /// List block's style
-  final bool isOrderedList;
+import 'base_block.dart';
 
-  /// Current order of the list. Ex: 1.; 2.; 3.;
-  final int order;
-
-  ListBlock({
-    required this.order,
+class TextBlock extends BaseBlock {
+  TextBlock({
     required int depth,
     required int start,
     required int end,
@@ -18,7 +12,6 @@ class ListBlock extends BaseBlock {
     required String text,
     required List<String> entityTypes,
     required String blockType,
-    required this.isOrderedList,
   }) : super(
           depth: depth,
           start: start,
@@ -30,7 +23,7 @@ class ListBlock extends BaseBlock {
           blockType: blockType,
         );
 
-  ListBlock copyWith({BaseBlock? block}) => ListBlock(
+  TextBlock copyWith({BaseBlock? block}) => TextBlock(
         depth: block?.depth ?? this.depth,
         start: block?.start ?? this.start,
         end: block?.end ?? this.end,
@@ -39,26 +32,24 @@ class ListBlock extends BaseBlock {
         data: block?.data ?? this.data,
         text: block?.text ?? this.text,
         blockType: block?.blockType ?? this.blockType,
-        isOrderedList: this.isOrderedList,
-        order: this.order,
       );
+}
 
-  String getDepthSpacing() {
-    String spacing = "";
-    int i = 1;
-    while (i < depth) {
-      spacing += '      ';
-      i += 1;
-    }
-    return spacing;
-  }
+class NewlineBlock extends BaseBlock {
+  NewlineBlock()
+      : super(
+          depth: 0,
+          start: 0,
+          end: 0,
+          inlineStyles: [],
+          data: {},
+          text: "",
+          entityTypes: [],
+          blockType: "newline",
+        );
 
   @override
   InlineSpan render(BuildContext context, {List<InlineSpan>? children}) {
-    return TextSpan(
-      text:
-          "${getDepthSpacing()}${isOrderedList ? "$order." : "-"} $textContent\n",
-      style: renderStyle(context),
-    );
+    return TextSpan(text: "\n\n", style: renderStyle(context));
   }
 }

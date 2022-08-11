@@ -1,10 +1,11 @@
-import 'package:draft_view/draft_view/block/action_block.dart';
-import 'package:draft_view/draft_view/block/base_block.dart';
-import 'package:draft_view/draft_view/block/callbacks.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import 'action_block.dart';
+import 'base_block.dart';
+import 'callbacks.dart';
 
 class LinkBlock extends ActionBlock {
   LinkBlock({

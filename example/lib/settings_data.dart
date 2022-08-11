@@ -1,4 +1,4 @@
-var settings = {
+const Map<String, dynamic> settings = {
   "settings": [
     {
       "id": "daa1c8fa-d79d-4b0b-a3ac-636746f25d68",

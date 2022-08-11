@@ -1,8 +1,9 @@
-import 'package:draft_view/draft_view/block/action_block.dart';
-import 'package:draft_view/draft_view/block/base_block.dart';
-import 'package:draft_view/draft_view/block/callbacks.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'action_block.dart';
+import 'base_block.dart';
+import 'callbacks.dart';
 
 class ImageBlock extends ActionBlock {
   ImageBlock({
@@ -209,7 +210,6 @@ class _ImageDetailViewState extends State<ImageDetailView> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          color: Theme.of(context).buttonColor,
           onPressed: () => Navigator.pop(context),
           icon: Icon(
             Icons.close,

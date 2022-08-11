@@ -1,4 +1,4 @@
-import 'package:draft_view/draft_view/block/blocks/audio_block.dart';
+import 'package:draft_view/draft_view/blocks/audio_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

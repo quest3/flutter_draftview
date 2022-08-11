@@ -1,4 +1,4 @@
-import 'package:draft_view/draft_view/block/base_block.dart';
+import 'package:draft_view/draft_view/blocks/base_block.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

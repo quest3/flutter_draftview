@@ -1,6 +1,7 @@
-import 'package:draft_view/draft_view/block/base_block.dart';
-import 'package:draft_view/draft_view/block/blocks/list_block.dart';
-import 'package:draft_view/draft_view/plugin/base_plugin.dart';
+import 'package:draft_view/draft_view/blocks/blocks.dart'
+    show BaseBlock, ListBlock;
+
+import 'base_plugin.dart';
 
 class ListPlugin extends BasePlugin {
   ListTreeNode root = ListTreeNode(isRoot: true);
