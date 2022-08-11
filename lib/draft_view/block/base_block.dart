@@ -1,6 +1,8 @@
 import 'dart:convert';
+
 import 'package:draft_view/draft_view/plugin/base_plugin.dart';
 import 'package:flutter/material.dart';
+
 import './extensions.dart';
 
 class BaseBlock {
