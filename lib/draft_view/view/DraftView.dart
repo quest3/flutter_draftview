@@ -61,10 +61,8 @@ class _DraftViewState extends State<DraftView> {
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
-        children: _renderText(),
-      ),
+    return Text.rich(
+      TextSpan(children: _renderText()),
     );
   }
 }
