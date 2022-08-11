@@ -51,6 +51,7 @@ void main() {
       var component = MaterialApp(
         home: Scaffold(
           body: ImageDetailView(
+            url: '',
             caption: "abc.com",
           ),
         ),

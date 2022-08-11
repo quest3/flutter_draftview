@@ -15,7 +15,7 @@ class BaseBlock {
   /// Text content
   final String text;
 
-  /// Draft js property. Starts at 0;
+  /// Draft js property
   final int depth;
 
   /// Block Type
@@ -57,7 +57,7 @@ class BaseBlock {
       );
 
   /// If the range within the current block's range
-  bool withInRange(int start, int end) {
+  bool withinRange(int start, int end) {
     if (start == end) {
       return false;
     }
@@ -118,16 +118,16 @@ class BaseBlock {
 
   /// get block from plugins' rendering map
   /// If no match, then use default
-  BaseBlock getBlock(BaseBlock block, List<BasePlugin> plugins) {
+  BaseBlock? getBlock(BaseBlock block, List<BasePlugin> plugins) {
     for (var plugin in plugins) {
       for (var style in block.inlineStyles) {
         if (plugin.inlineStyleRenderFn?.containsKey(style) ?? false) {
-          return plugin.inlineStyleRenderFn![style]!.copyWith(block: block);
+          return plugin.inlineStyleRenderFn?[style]?.copyWith(block: block);
         }
       }
       for (var entity in block.entityTypes) {
         if (plugin.entityRenderFn?.containsKey(entity) ?? false) {
-          return plugin.entityRenderFn![entity]!.copyWith(block: block);
+          return plugin.entityRenderFn?[entity]?.copyWith(block: block);
         }
       }
     }
@@ -256,14 +256,14 @@ class BaseBlock {
       blocks = [first, middle, last];
     }
 
-    blocks = blocks.map((e) => this.getBlock(e, plugins)).toList();
+    blocks = blocks.map((e) => this.getBlock(e, plugins)!).toList();
 
     return blocks;
   }
 
   /// get text color
-  Color textColor(context) {
-    var color = Theme.of(context).textTheme.bodyText1!.color!;
+  Color? textColor(context) {
+    var color = Theme.of(context).textTheme.bodyText1?.color;
     var style = inlineStyles.firstWhere((element) => element[0] == "#",
         orElse: () => "");
     if (style.isNotEmpty) {

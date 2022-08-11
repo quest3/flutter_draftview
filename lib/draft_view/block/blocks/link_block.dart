@@ -1,10 +1,12 @@
+import 'package:draft_view/draft_view/block/action_block.dart';
 import 'package:draft_view/draft_view/block/base_block.dart';
+import 'package:draft_view/draft_view/block/callbacks.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class LinkBlock extends BaseBlock {
+class LinkBlock extends ActionBlock {
   LinkBlock({
     required int depth,
     required int start,
@@ -15,6 +17,10 @@ class LinkBlock extends BaseBlock {
     required List<String> entityTypes,
     required String blockType,
     required List<BaseBlock> children,
+    ActionBuilder? actionBuilder,
+    OnTap? onTap,
+    OnDoubleTap? onDoubleTap,
+    OnLongPress? onLongPress,
   }) : super(
           depth: depth,
           start: start,
@@ -25,6 +31,10 @@ class LinkBlock extends BaseBlock {
           entityTypes: entityTypes,
           blockType: blockType,
           children: children,
+          onTap: onTap,
+          onDoubleTap: onDoubleTap,
+          onLongPress: onLongPress,
+          actionBuilder: actionBuilder,
         );
 
   LinkBlock copyWith({BaseBlock? block}) => LinkBlock(
@@ -37,6 +47,10 @@ class LinkBlock extends BaseBlock {
         text: block?.text ?? this.text,
         blockType: block?.blockType ?? this.blockType,
         children: block?.children ?? this.children ?? [],
+        actionBuilder: this.actionBuilder,
+        onTap: this.onTap,
+        onDoubleTap: this.onDoubleTap,
+        onLongPress: this.onLongPress,
       );
   @override
   TextDecoration get decoration => TextDecoration.underline;
@@ -48,38 +62,48 @@ class LinkBlock extends BaseBlock {
 
   @override
   InlineSpan render(BuildContext context, {List<InlineSpan>? children}) {
-    GestureRecognizer? recognizer = null;
+    late GestureRecognizer recognizer;
 
     if (data.containsKey('url')) {
       if (data['url'] is String) {
         recognizer = TapGestureRecognizer()
           ..onTap = () {
-            showBottomSheet(
-              context: context,
-              builder: (c) => LinkCard(
-                link: data['url'],
-              ),
-            );
+            if (onTap != null) {
+              onTap!(this);
+            } else {
+              showBottomSheet(
+                context: context,
+                builder: (c) => LinkCard(
+                  link: data['url'],
+                  title: "No title",
+                  summary: "No summary",
+                ),
+              );
+            }
           };
       } else {
         recognizer = TapGestureRecognizer()
           ..onTap = () {
-            showBottomSheet(
-              context: context,
-              builder: (c) => LinkCard(
-                link: data['url']['link'],
-                title: data['url']['title'],
-                image: data['url']['image'],
-                summary: data['url']['summary'],
-              ),
-            );
+            if (onTap != null) {
+              onTap!(this);
+            } else {
+              showBottomSheet(
+                context: context,
+                builder: (c) => LinkCard(
+                  link: data['url']['link'],
+                  title: data['url']['title'],
+                  image: data['url']['image'],
+                  summary: data['url']['summary'],
+                ),
+              );
+            }
           };
       }
     }
 
     return TextSpan(
       recognizer: recognizer,
-      text: "$textContent",
+      text: textContent,
       children: children,
       style: renderStyle(context),
     );
@@ -92,29 +116,37 @@ class LinkCard extends StatelessWidget {
   final String? summary;
   final String? image;
 
-  const LinkCard(
-      {Key? key, this.title, required this.link, this.summary, this.image})
-      : super(key: key);
+  const LinkCard({
+    Key? key,
+    this.title,
+    required this.link,
+    this.summary,
+    this.image,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
                 width: MediaQuery.of(context).size.width,
                 child: ListTile(
                   leading: image != null
                       ? Image.network(
                           image!,
                           height: 50,
+                          width: 150,
+                          fit: BoxFit.fitWidth,
                           loadingBuilder: (c, child, loadingProgress) {
                             if (loadingProgress == null) return child;
                             return Container(
                               height: 50,
-                              color: Colors.grey.withOpacity(0.4),
+                              width: 150,
                               child: Center(
                                 child: CupertinoActivityIndicator(),
                               ),
@@ -133,7 +165,9 @@ class LinkCard extends StatelessWidget {
                       }
                     },
                   ),
-                )),
+                ),
+              ),
+            ),
           ),
         ),
         Positioned(

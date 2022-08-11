@@ -1,4 +1,4 @@
-// import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:draft_view/draft_view/block/base_block.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -73,13 +73,13 @@ class AudioComponent extends StatefulWidget {
 }
 
 class _AudioComponentState extends State<AudioComponent> {
-  // final AudioPlayer audioPlayer = AudioPlayer();
+  final AudioPlayer audioPlayer = AudioPlayer();
   bool isPlaying = false;
   bool hasStarted = false;
 
   Future<void> _play() async {
     if (!hasStarted) {
-      // await audioPlayer.play(widget.url);
+      await audioPlayer.play(UrlSource(widget.url));
       setState(() {
         isPlaying = true;
       });
@@ -88,12 +88,12 @@ class _AudioComponentState extends State<AudioComponent> {
 
   Future<void> _pauseOrResume() async {
     if (isPlaying) {
-      // await audioPlayer.pause();
+      await audioPlayer.pause();
       setState(() {
         isPlaying = false;
       });
     } else {
-      // await audioPlayer.resume();
+      await audioPlayer.resume();
       setState(() {
         isPlaying = true;
       });
@@ -101,14 +101,14 @@ class _AudioComponentState extends State<AudioComponent> {
   }
 
   Future<void> _seekTo(Duration duration) async {
-    // await audioPlayer.seek(duration);
+    await audioPlayer.seek(duration);
   }
 
-  Widget _buildPlayer(Duration? total, Duration? current) {
+  Widget _buildPlayer(Duration total, Duration current) {
     return Card(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        constraints: BoxConstraints.expand(height: 100),
+        height: 100,
         child: Row(
           children: [
             Expanded(
@@ -117,8 +117,8 @@ class _AudioComponentState extends State<AudioComponent> {
                 children: [
                   Spacer(),
                   Text(
-                    "Playback not support! ${current?.toAudioString()} / ${total?.toAudioString()}",
-                    maxLines: 1,
+                    "${current.toAudioString()} / ${total.toAudioString()}",
+                    textAlign: TextAlign.center,
                   ),
                   Row(
                     children: [
@@ -160,8 +160,8 @@ class _AudioComponentState extends State<AudioComponent> {
                 children: [
                   Slider(
                     min: 0,
-                    max: total?.inMilliseconds.toDouble() ?? 100,
-                    value: current?.inMilliseconds.toDouble() ?? 0,
+                    max: total.inMilliseconds.toDouble(),
+                    value: current.inMilliseconds.toDouble(),
                     onChanged: (double value) async {
                       var duration = Duration(milliseconds: value.toInt());
                       await _seekTo(duration);
@@ -181,12 +181,11 @@ class _AudioComponentState extends State<AudioComponent> {
                               },
                               child: Text(
                                 "${widget.url}",
-                                maxLines: 1,
-                                overflow: TextOverflow.clip,
+                                maxLines: 2,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .caption!
-                                    .copyWith(
+                                    .caption
+                                    ?.copyWith(
                                       color: Colors.blue,
                                       decoration: TextDecoration.underline,
                                     ),
@@ -206,9 +205,20 @@ class _AudioComponentState extends State<AudioComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildPlayer(
-      Duration(seconds: 100),
-      Duration(seconds: 0),
+    return Column(
+      children: [
+        StreamBuilder<Duration>(
+          stream: audioPlayer.onDurationChanged,
+          builder: (context, snapshot) {
+            return StreamBuilder<Duration>(
+              stream: audioPlayer.onPositionChanged,
+              builder: (context, snapshot2) {
+                return _buildPlayer(snapshot.data!, snapshot2.data!);
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 }

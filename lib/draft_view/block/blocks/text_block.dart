@@ -49,6 +49,6 @@ class NewlineBlock extends BaseBlock {
 
   @override
   InlineSpan render(BuildContext context, {List<InlineSpan>? children}) {
-    return TextSpan(text: "\n", style: renderStyle(context));
+    return TextSpan(text: "\n\n", style: renderStyle(context));
   }
 }

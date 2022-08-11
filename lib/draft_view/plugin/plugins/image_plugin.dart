@@ -1,7 +1,20 @@
 import 'package:draft_view/draft_view/block/blocks/image_block.dart';
+import 'package:draft_view/draft_view/block/callbacks.dart';
 import 'package:draft_view/draft_view/plugin/base_plugin.dart';
 
 class ImagePlugin extends BasePlugin {
+  final OnTap? onTap;
+  final OnDoubleTap? onDoubleTap;
+  final OnLongPress? onLongPress;
+  final ActionBuilder? actionBuilder;
+
+  ImagePlugin({
+    this.onDoubleTap,
+    this.onLongPress,
+    this.onTap,
+    this.actionBuilder,
+  }) : super();
+
   @override
   get entityRenderFn => {
         "image": ImageBlock(
@@ -13,6 +26,10 @@ class ImagePlugin extends BasePlugin {
           inlineStyles: [],
           start: 0,
           text: '',
+          onTap: onTap,
+          onDoubleTap: onDoubleTap,
+          onLongPress: onLongPress,
+          actionBuilder: actionBuilder,
         )
       };
 }

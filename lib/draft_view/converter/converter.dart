@@ -16,12 +16,13 @@ class Converter {
   List<BaseBlock> convert() {
     List<BaseBlock> blocks = [];
     List<BaseBlock> retBlocks = [];
-    List<RawDraftContentBlock> draftBlocks = [];
-    Map<String, RawDraftEntityKeyStringAny> entityMap = {};
-    DraftObject draftObject = DraftObject.fromJson(draftData);
-    draftBlocks = draftObject.blocks;
-    entityMap = draftObject.entityMap;
-    for (var draftBlock in draftBlocks) {
+    final DraftObject draftObject = DraftObject.fromJson(draftData);
+    final List<RawDraftContentBlock> draftBlocks = draftObject.blocks;
+    final Map<String, RawDraftEntityKeyStringAny> entityMap =
+        draftObject.entityMap;
+
+    for (final draftBlock in draftBlocks) {
+      draftBlocks.add(draftBlock);
       var hasAdded = false;
       var tmpB = BaseBlock(
         depth: draftBlock.depth.toInt(),
@@ -36,9 +37,12 @@ class Converter {
       for (var plugin in plugins) {
         if (plugin.blockRenderFn(tmpB)?.containsKey(draftBlock.type) ?? false) {
           var b = plugin
-              .blockRenderFn(tmpB, shouldWrite: true)![draftBlock.type]!
+              .blockRenderFn(tmpB, shouldWrite: true)?[draftBlock.type]!
               .copyWith(block: tmpB);
-          blocks.add(b);
+
+          if (b != null) {
+            blocks.add(b);
+          }
           hasAdded = true;
           break;
         }
@@ -47,6 +51,7 @@ class Converter {
         blocks.add(tmpB);
       }
     }
+
     int i = 0;
 
     while (i < draftBlocks.length) {
@@ -66,7 +71,7 @@ class Converter {
       if (block.children != null) {
         if (bs.length > 0) {
           if (bs.first != block) {
-            block.children!.addAll(bs);
+            block.children?.addAll(bs);
           }
         }
         retBlocks.add(block);
@@ -82,14 +87,14 @@ class Converter {
           if (curDraftBlock.text.isNotEmpty &&
               nextDraftBlock!.text.isNotEmpty) {
             retBlocks.add(NewlineBlock());
-          } else if (curDraftBlock.type != nextDraftBlock!.type) {
+          } else if (curDraftBlock.type != nextDraftBlock?.type) {
             retBlocks.add(NewlineBlock());
           } else if (curDraftBlock.text.isEmpty &&
               (prevDraftBlock?.text.isNotEmpty ?? false) &&
-              nextDraftBlock.text.isNotEmpty) {
+              nextDraftBlock!.text.isNotEmpty) {
             retBlocks.add(NewlineBlock());
           } else if (curDraftBlock.text.isEmpty &&
-              nextDraftBlock.text.isEmpty) {
+              nextDraftBlock!.text.isEmpty) {
             retBlocks.add(NewlineBlock());
           }
         }
@@ -115,7 +120,7 @@ class Converter {
       int i = 0;
       while (i < retBlocks.length) {
         var tmpBlock = retBlocks[i];
-        if (tmpBlock.withInRange(start, end)) {
+        if (tmpBlock.withinRange(start, end)) {
           var entityData = entityMap[entity.key];
           var newBlocks = tmpBlock.split(
             depth: tmpBlock.depth,
@@ -145,7 +150,7 @@ class Converter {
       int i = 0;
       while (i < retBlocks.length) {
         var tmpBlock = retBlocks[i];
-        if (tmpBlock.withInRange(start, end)) {
+        if (tmpBlock.withinRange(start, end)) {
           var newBlocks = tmpBlock.split(
             depth: tmpBlock.depth,
             start: start,

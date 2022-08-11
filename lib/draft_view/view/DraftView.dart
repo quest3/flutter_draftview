@@ -21,7 +21,6 @@ class _DraftViewState extends State<DraftView> {
   void initState() {
     super.initState();
     blocks = _convertToBlocks();
-    print(blocks);
   }
 
   @override
@@ -50,7 +49,8 @@ class _DraftViewState extends State<DraftView> {
 
       var span = curBlock.render(
         context,
-        children: curBlock.children?.map((e) => e.render(context)).toList(),
+        children:
+            curBlock.children?.map((e) => e.render(context)).toList() ?? [],
       );
       spans.add(span);
 
@@ -61,8 +61,6 @@ class _DraftViewState extends State<DraftView> {
 
   @override
   Widget build(BuildContext context) {
-    return Text.rich(
-      TextSpan(children: _renderText()),
-    );
+    return Text.rich(TextSpan(children: _renderText()));
   }
 }

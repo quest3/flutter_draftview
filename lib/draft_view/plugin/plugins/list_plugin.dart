@@ -1,4 +1,6 @@
-import '../../../draft_view.dart';
+import 'package:draft_view/draft_view/block/base_block.dart';
+import 'package:draft_view/draft_view/block/blocks/list_block.dart';
+import 'package:draft_view/draft_view/plugin/base_plugin.dart';
 
 class ListPlugin extends BasePlugin {
   ListTreeNode root = ListTreeNode(isRoot: true);
@@ -71,7 +73,7 @@ class ListTreeNode {
   ListTreeNode({
     this.parent,
     this.content,
-    required this.isRoot,
+    this.isRoot = true,
   });
 
   /// Add child to the current node. Return the newly created node

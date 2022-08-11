@@ -40,7 +40,7 @@ class BlockQuoteBlock extends BaseBlock {
   @override
   InlineSpan render(BuildContext context, {List<InlineSpan>? children}) {
     var style = renderStyle(context);
-    var text = children?.length  == 0 ? textContent : null;
+    var text = children?.length == 0 ? textContent : null;
 
     return WidgetSpan(
       child: Container(

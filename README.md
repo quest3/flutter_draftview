@@ -18,7 +18,7 @@ It is implemented in a plugable design so that you can create your own plugin ea
 - PostSettings Plugin. [Example](https://blog.sirileepage.com/#/post/39)
 - Header Plugin
 - Basic Text Plugin
-- Audio Plugin (cannot play now. Use non-null-safety version!)
+- Audio Plugin
 
 ## Demo
 
