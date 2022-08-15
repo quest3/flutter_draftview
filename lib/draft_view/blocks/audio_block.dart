@@ -1,4 +1,4 @@
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -64,6 +64,7 @@ class AudioBlock extends BaseBlock {
   }
 }
 
+// TODO not currently supported
 class AudioComponent extends StatefulWidget {
   final String url;
 
@@ -74,13 +75,13 @@ class AudioComponent extends StatefulWidget {
 }
 
 class _AudioComponentState extends State<AudioComponent> {
-  final AudioPlayer audioPlayer = AudioPlayer();
+  // final AudioPlayer audioPlayer = AudioPlayer();
   bool isPlaying = false;
   bool hasStarted = false;
 
   Future<void> _play() async {
     if (!hasStarted) {
-      await audioPlayer.play(UrlSource(widget.url));
+      // await audioPlayer.play(UrlSource(widget.url));
       setState(() {
         isPlaying = true;
       });
@@ -89,12 +90,12 @@ class _AudioComponentState extends State<AudioComponent> {
 
   Future<void> _pauseOrResume() async {
     if (isPlaying) {
-      await audioPlayer.pause();
+      // await audioPlayer.pause();
       setState(() {
         isPlaying = false;
       });
     } else {
-      await audioPlayer.resume();
+      // await audioPlayer.resume();
       setState(() {
         isPlaying = true;
       });
@@ -102,7 +103,7 @@ class _AudioComponentState extends State<AudioComponent> {
   }
 
   Future<void> _seekTo(Duration duration) async {
-    await audioPlayer.seek(duration);
+    // await audioPlayer.seek(duration);
   }
 
   Widget _buildPlayer(Duration total, Duration current) {
@@ -149,12 +150,7 @@ class _AudioComponentState extends State<AudioComponent> {
                 ],
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: VerticalDivider(
-                width: 10,
-              ),
-            ),
+            Expanded(flex: 1, child: VerticalDivider(width: 10)),
             Expanded(
               flex: 30,
               child: Column(
@@ -206,20 +202,21 @@ class _AudioComponentState extends State<AudioComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        StreamBuilder<Duration>(
-          stream: audioPlayer.onDurationChanged,
-          builder: (context, snapshot) {
-            return StreamBuilder<Duration>(
-              stream: audioPlayer.onPositionChanged,
-              builder: (context, snapshot2) {
-                return _buildPlayer(snapshot.data!, snapshot2.data!);
-              },
-            );
-          },
-        ),
-      ],
-    );
+    return SizedBox.shrink();
+    // return Column(
+    //   children: [
+    //     StreamBuilder<Duration>(
+    //       stream: audioPlayer.onDurationChanged,
+    //       builder: (context, snapshot) {
+    //         return StreamBuilder<Duration>(
+    //           stream: audioPlayer.onPositionChanged,
+    //           builder: (context, snapshot2) {
+    //             return _buildPlayer(snapshot.data!, snapshot2.data!);
+    //           },
+    //         );
+    //       },
+    //     ),
+    //   ],
+    // );
   }
 }

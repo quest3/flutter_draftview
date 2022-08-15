@@ -7,8 +7,8 @@ import 'draft_object.dart';
 export 'draft_object.dart';
 
 class Converter {
-  List<BasePlugin> plugins;
-  Map<String, dynamic> draftData;
+  final List<BasePlugin> plugins;
+  final Map<String, dynamic> draftData;
 
   Converter({required this.plugins, required this.draftData}) {
     assert(draftData.containsKey('blocks') == true);
@@ -24,7 +24,6 @@ class Converter {
         draftObject.entityMap;
 
     for (final draftBlock in draftBlocks) {
-      draftBlocks.add(draftBlock);
       var hasAdded = false;
       var tmpB = BaseBlock(
         depth: draftBlock.depth.toInt(),

@@ -19,27 +19,30 @@ class DraftObject {
       );
 
   factory DraftObject.fromRawJson(String str) =>
-      DraftObject.fromJson(json.decode(str));
+      DraftObject.fromJson(json.decode(str) as Map<String, dynamic>);
 
   String toRawJson() => json.encode(toJson());
 
   factory DraftObject.fromJson(Map<String, dynamic> json) => DraftObject(
-        blocks: List<RawDraftContentBlock>.from(
-            json["blocks"].map((x) => RawDraftContentBlock.fromJson(x))),
-        entityMap: Map.from(json["entityMap"]).map((k, v) =>
-            MapEntry<String, RawDraftEntityKeyStringAny>(
-                k, RawDraftEntityKeyStringAny.fromJson(v))),
+        blocks: (json["blocks"] as List<dynamic>)
+            .map(
+                (x) => RawDraftContentBlock.fromJson(x as Map<String, dynamic>))
+            .toList(),
+        entityMap: Map<String, dynamic>.from(json["entityMap"] as Map).map(
+          (k, v) => MapEntry(k,
+              RawDraftEntityKeyStringAny.fromJson(v as Map<String, dynamic>)),
+        ),
       );
 
   Map<String, dynamic> toJson() => {
-        "blocks": List<dynamic>.from(blocks.map((x) => x.toJson())),
-        "entityMap": Map.from(entityMap)
-            .map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
+        "blocks": blocks.map((x) => x.toJson()).toList(),
+        "entityMap":
+            entityMap.map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
       };
 }
 
 class RawDraftContentBlock {
-  final dynamic data;
+  final Map<String, dynamic> data;
   final double depth;
   final List<RawDraftEntityRange> entityRanges;
   final List<RawDraftInlineStyleRange> inlineStyleRanges;
@@ -58,7 +61,7 @@ class RawDraftContentBlock {
   });
 
   RawDraftContentBlock copyWith({
-    dynamic data,
+    Map<String, dynamic>? data,
     double? depth,
     List<RawDraftEntityRange>? entityRanges,
     List<RawDraftInlineStyleRange>? inlineStyleRanges,
@@ -77,19 +80,21 @@ class RawDraftContentBlock {
       );
 
   factory RawDraftContentBlock.fromRawJson(String str) =>
-      RawDraftContentBlock.fromJson(json.decode(str));
+      RawDraftContentBlock.fromJson(json.decode(str) as Map<String, dynamic>);
 
   String toRawJson() => json.encode(toJson());
 
   factory RawDraftContentBlock.fromJson(Map<String, dynamic> json) =>
       RawDraftContentBlock(
-        data: json["data"],
+        data: Map<String, dynamic>.from(json["data"]),
         depth: json["depth"].toDouble(),
-        entityRanges: List<RawDraftEntityRange>.from(
-            json["entityRanges"].map((x) => RawDraftEntityRange.fromJson(x))),
-        inlineStyleRanges: List<RawDraftInlineStyleRange>.from(
-            json["inlineStyleRanges"]
-                .map((x) => RawDraftInlineStyleRange.fromJson(x))),
+        entityRanges: (json["entityRanges"] as List<dynamic>)
+            .map((x) => RawDraftEntityRange.fromJson(x as Map<String, dynamic>))
+            .toList(),
+        inlineStyleRanges: (json["inlineStyleRanges"] as List<dynamic>)
+            .map((x) =>
+                RawDraftInlineStyleRange.fromJson(x as Map<String, dynamic>))
+            .toList(),
         key: json["key"],
         text: json["text"],
         type: json["type"],
@@ -98,9 +103,8 @@ class RawDraftContentBlock {
   Map<String, dynamic> toJson() => {
         "data": data,
         "depth": depth,
-        "entityRanges": List<dynamic>.from(entityRanges.map((x) => x.toJson())),
-        "inlineStyleRanges":
-            List<dynamic>.from(inlineStyleRanges.map((x) => x.toJson())),
+        "entityRanges": entityRanges.map((x) => x.toJson()).toList(),
+        "inlineStyleRanges": inlineStyleRanges.map((x) => x.toJson()).toList(),
         "key": key,
         "text": text,
         "type": type,
@@ -130,7 +134,7 @@ class RawDraftEntityRange {
       );
 
   factory RawDraftEntityRange.fromRawJson(String str) =>
-      RawDraftEntityRange.fromJson(json.decode(str));
+      RawDraftEntityRange.fromJson(json.decode(str) as Map<String, dynamic>);
 
   String toRawJson() => json.encode(toJson());
 
@@ -171,7 +175,8 @@ class RawDraftInlineStyleRange {
       );
 
   factory RawDraftInlineStyleRange.fromRawJson(String str) =>
-      RawDraftInlineStyleRange.fromJson(json.decode(str));
+      RawDraftInlineStyleRange.fromJson(
+          json.decode(str) as Map<String, dynamic>);
 
   String toRawJson() => json.encode(toJson());
 
@@ -212,20 +217,20 @@ class RawDraftEntityKeyStringAny {
       );
 
   factory RawDraftEntityKeyStringAny.fromRawJson(String str) =>
-      RawDraftEntityKeyStringAny.fromJson(json.decode(str));
+      RawDraftEntityKeyStringAny.fromJson(
+          json.decode(str) as Map<String, dynamic>);
 
   String toRawJson() => json.encode(toJson());
 
   factory RawDraftEntityKeyStringAny.fromJson(Map<String, dynamic> json) =>
       RawDraftEntityKeyStringAny(
-        data: Map.from(json["data"])
-            .map((k, v) => MapEntry<String, dynamic>(k, v)),
+        data: Map<String, dynamic>.from(json["data"]),
         mutability: json["mutability"],
         type: json["type"],
       );
 
   Map<String, dynamic> toJson() => {
-        "data": Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v)),
+        "data": data,
         "mutability": mutability,
         "type": type,
       };
@@ -254,20 +259,19 @@ class RawDraftEntityT {
       );
 
   factory RawDraftEntityT.fromRawJson(String str) =>
-      RawDraftEntityT.fromJson(json.decode(str));
+      RawDraftEntityT.fromJson(json.decode(str) as Map<String, dynamic>);
 
   String toRawJson() => json.encode(toJson());
 
   factory RawDraftEntityT.fromJson(Map<String, dynamic> json) =>
       RawDraftEntityT(
-        data: Map.from(json["data"])
-            .map((k, v) => MapEntry<String, dynamic>(k, v)),
+        data: Map<String, dynamic>.from(json["data"]),
         mutability: json["mutability"],
         type: json["type"],
       );
 
   Map<String, dynamic> toJson() => {
-        "data": Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v)),
+        "data": data,
         "mutability": mutability,
         "type": type,
       };

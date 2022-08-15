@@ -7,25 +7,6 @@ import 'package:flutter/material.dart';
 
 import 'base_block.dart';
 
-// To parse this JSON data, do
-//
-//     final settings = settingsFromJson(jsonString);
-//     final postSettings = postSettingsFromJson(jsonString);
-//     final detailSettings = detailSettingsFromJson(jsonString);
-Settings settingsFromJson(String str) => Settings.fromJson(json.decode(str));
-
-String settingsToJson(Settings data) => json.encode(data.toJson());
-
-_PostSettings postSettingsFromJson(String str) =>
-    _PostSettings.fromJson(json.decode(str));
-
-String postSettingsToJson(_PostSettings data) => json.encode(data.toJson());
-
-_DetailSettings detailSettingsFromJson(String str) =>
-    _DetailSettings.fromJson(json.decode(str));
-
-String detailSettingsToJson(_DetailSettings data) => json.encode(data.toJson());
-
 /// Post Settings object
 class Settings {
   final List<_PostSettings> settings;
@@ -41,20 +22,23 @@ class Settings {
         settings: settings ?? this.settings,
       );
 
+  factory Settings.fromRawJson(String str) =>
+      Settings.fromJson(json.decode(str) as Map<String, dynamic>);
+
+  String toRawJson() => json.encode(toJson());
+
   factory Settings.fromJson(Map<String, dynamic> json) => Settings(
         settings: json["settings"] == null
             ? []
-            : List<_PostSettings>.from(
-                json["settings"].map(
-                  (x) => _PostSettings.fromJson(x),
-                ),
-              ),
+            : (json["settings"] as List<dynamic>)
+                .map(
+                  (x) => _PostSettings.fromJson(x as Map<String, dynamic>),
+                )
+                .toList(),
       );
 
   Map<String, dynamic> toJson() => {
-        "settings": settings.isEmpty
-            ? []
-            : List<dynamic>.from(settings.map((x) => x.toJson())),
+        "settings": settings.map((x) => x.toJson()).toList(),
       };
 }
 
@@ -76,18 +60,22 @@ class _PostSettings {
         id: id ?? this.id,
       );
 
+  factory _PostSettings.fromRawJson(String str) =>
+      _PostSettings.fromJson(json.decode(str) as Map<String, dynamic>);
+
+  String toRawJson() => json.encode(toJson());
+
   factory _PostSettings.fromJson(Map<String, dynamic> json) => _PostSettings(
         detailSettings: json["detailSettings"] == null
             ? []
-            : List<_DetailSettings>.from(
-                json["detailSettings"].map((x) => _DetailSettings.fromJson(x))),
+            : (json["detailSettings"] as List<dynamic>)
+                .map((x) => _DetailSettings.fromJson(x as Map<String, dynamic>))
+                .toList(),
         id: json["id"] == null ? null : json["id"],
       );
 
   Map<String, dynamic> toJson() => {
-        "detailSettings": detailSettings.isEmpty
-            ? null
-            : List<dynamic>.from(detailSettings.map((x) => x.toJson())),
+        "detailSettings": detailSettings.map((x) => x.toJson()).toList(),
         "id": id == null ? null : id,
       };
 }
@@ -114,11 +102,17 @@ class _DetailSettings {
         id: id ?? this.id,
       );
 
+  factory _DetailSettings.fromRawJson(String str) =>
+      _DetailSettings.fromJson(json.decode(str) as Map<String, dynamic>);
+
+  String toRawJson() => json.encode(toJson());
+
   factory _DetailSettings.fromJson(Map<String, dynamic> json) =>
       _DetailSettings(
-          description: json["description"] == null ? null : json["description"],
-          name: json["name"] == null ? null : json["name"],
-          id: json['id']);
+        description: json["description"] == null ? null : json["description"],
+        name: json["name"] == null ? null : json["name"],
+        id: json['id'],
+      );
 
   Map<String, dynamic> toJson() => {
         "description": description == null ? null : description,

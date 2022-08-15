@@ -10,7 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   url_launcher: ^6.1.5
-  audioplayers: ^1.0.1
+#  TODO not currently supported
+#  audioplayers: ^1.0.1
 
 dev_dependencies:
   flutter_test:
