@@ -146,7 +146,7 @@ class DraftWidget extends StatelessWidget {
   void _recognizePlainLinks(DraftTree draftNode) {
     List<DraftBlock> blocks = draftNode.blocks;
     Map<String, EntityData> entityMap = draftNode.entityMap;
-    int maxKey = entityMap.keys.map((e) => int.tryParse(e)).whereType<int>().reduce((value, element) => max(value, element));
+    int maxKey = entityMap.keys.isEmpty ? 0 : entityMap.keys.map((e) => int.tryParse(e)).whereType<int>().reduce((value, element) => max(value, element));
     int newKey = maxKey + 1;
     RegExp reg = RegExp(URL_REGEX);
     for (var block in blocks) {
