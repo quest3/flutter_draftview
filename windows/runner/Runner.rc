@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "xyz.quest3.draft_renderer" "\0"
-            VALUE "FileDescription", "draft_renderer" "\0"
+            VALUE "CompanyName", "xyz.quest3.draft_view" "\0"
+            VALUE "FileDescription", "draft_view" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "draft_renderer" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 xyz.quest3.draft_renderer. All rights reserved." "\0"
-            VALUE "OriginalFilename", "draft_renderer.exe" "\0"
-            VALUE "ProductName", "draft_renderer" "\0"
+            VALUE "InternalName", "draft_view" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 xyz.quest3.draft_view. All rights reserved." "\0"
+            VALUE "OriginalFilename", "draft_view.exe" "\0"
+            VALUE "ProductName", "draft_view" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

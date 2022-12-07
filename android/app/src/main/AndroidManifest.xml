@@ -1,7 +1,7 @@
 <manifest xmlns:android = "http://schemas.android.com/apk/res/android"
-          package = "xyz.quest3.draft_renderer.draft_renderer">
+          package = "xyz.quest3.draft_view.draft_view">
 	<application
-		android:label = "draft_renderer"
+		android:label = "draft_view"
 		android:name = "${applicationName}"
 		android:icon = "@mipmap/ic_launcher">
 		<activity

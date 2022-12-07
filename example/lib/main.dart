@@ -1,4 +1,4 @@
-import 'package:draft_renderer/draft_widget.dart';
+import 'package:draft_view/draft_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_json/pretty_json.dart';
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'DraftWidget Demo',
+      title: 'DraftView Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         textTheme: const TextTheme(
@@ -41,7 +41,7 @@ class Demo extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
-        middle: Text("DraftWidget"),
+        middle: Text("DraftView"),
       ),
       child: Scaffold(
         body: Scrollbar(
@@ -54,7 +54,7 @@ class Demo extends StatelessWidget {
                 right: 16,
               ),
               child: Material(
-                child: DraftWidget(
+                child: DraftView(
                   rawDraftData: data,
                   codeStyle: const TextStyle(fontSize: 13, fontFamily: 'mono', fontWeight: FontWeight.w400, color: Colors.black),
                   linkColor: Colors.blue,

@@ -1,14 +1,14 @@
 import 'dart:math';
 
-import 'package:draft_renderer/models.dart';
-import 'package:draft_renderer/renderers/atomic.dart';
-import 'package:draft_renderer/renderers/code.dart';
-import 'package:draft_renderer/renderers/list.dart';
-import 'package:draft_renderer/renderers/quote.dart';
-import 'package:draft_renderer/renderers/text.dart';
+import 'package:draft_view/models.dart';
+import 'package:draft_view/renderers/atomic.dart';
+import 'package:draft_view/renderers/code.dart';
+import 'package:draft_view/renderers/list.dart';
+import 'package:draft_view/renderers/quote.dart';
+import 'package:draft_view/renderers/text.dart';
 import 'package:flutter/material.dart';
 
-class DraftWidget extends StatelessWidget {
+class DraftView extends StatelessWidget {
   static const URL_REGEX =
       r"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[.\!\/\\w]*))?)";
   static const MENTION_REGEX = r"(^|\s)@([0-9a-zA-Z._]+)";
@@ -68,7 +68,7 @@ class DraftWidget extends StatelessWidget {
   late final BlockQuoteRenderer _blockQuoteRenderer;
   late final ImageRenderer _imageRenderer;
 
-  DraftWidget(
+  DraftView(
       {Key? key,
       required BuildContext context,
       required this.rawDraftData,

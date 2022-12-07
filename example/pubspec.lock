@@ -106,7 +106,7 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.2.4"
-  draft_renderer:
+  draft_view:
     dependency: "direct main"
     description:
       path: ".."

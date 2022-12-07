@@ -1,6 +1,6 @@
 {
-  "name": "draft_renderer",
-  "short_name": "draft_renderer",
+  "name": "draft_view",
+  "short_name": "draft_view",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",

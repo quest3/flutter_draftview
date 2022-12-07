@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = draft_renderer
+PRODUCT_NAME = draft_view
 
 // The application's bundle identifier
 PRODUCT_BUNDLE_IDENTIFIER = xyz.quest3.draftrenderer.draftRenderer
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2022 xyz.quest3.draft_renderer. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2022 xyz.quest3.draft_view. All rights reserved.

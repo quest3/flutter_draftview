@@ -31,7 +31,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  draft_renderer:
+  draft_view:
     path: ../
   pretty_json: ^2.0.0
 

@@ -1,6 +1,6 @@
-import 'package:draft_renderer/models.dart';
-import 'package:draft_renderer/renderers/base.dart';
-import 'package:draft_renderer/renderers/text.dart';
+import 'package:draft_view/models.dart';
+import 'package:draft_view/renderers/base.dart';
+import 'package:draft_view/renderers/text.dart';
 import 'package:flutter/material.dart';
 
 class CodeBlockRenderer extends Renderer {

@@ -1,4 +1,4 @@
-package xyz.quest3.draft_renderer.draft_renderer
+package xyz.quest3.draft_view.draft_view
 
 import io.flutter.embedding.android.FlutterActivity
 
