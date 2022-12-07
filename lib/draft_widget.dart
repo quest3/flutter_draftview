@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 class DraftWidget extends StatelessWidget {
   static const URL_REGEX =
       r"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[.\!\/\\w]*))?)";
+  static const MENTION_REGEX = r"(^|\s)@([0-9a-zA-Z._]+)";
 
   ///Root span. All rendered spans will be this span's children
   late final InlineSpan _rootSpan;
@@ -18,8 +19,8 @@ class DraftWidget extends StatelessWidget {
   ///Input json data
   final Map<String, dynamic> rawDraftData;
 
-  ///Default text style
-  final TextStyle? textStyle;
+  ///Theme data. TextStyle bodyText1 and  headline1 ~ headline6 must be set
+  late final ThemeData themeData;
 
   ///Text style for code block
   final TextStyle? codeStyle;
@@ -29,24 +30,6 @@ class DraftWidget extends StatelessWidget {
 
   ///Amount of spaces for one indent, default 4
   final int indent;
-
-  ///Text style for header-one
-  final TextStyle? h1Style;
-
-  ///Text style for header-two
-  final TextStyle? h2Style;
-
-  ///Text style for header-three
-  final TextStyle? h3Style;
-
-  ///Text style for header-four
-  final TextStyle? h4Style;
-
-  ///Text style for header-five
-  final TextStyle? h5Style;
-
-  ///Text style for header-six
-  final TextStyle? h6Style;
 
   ///Text style for ordered-list-item
   final TextStyle? orderedListItemStyle;
@@ -89,16 +72,10 @@ class DraftWidget extends StatelessWidget {
       {Key? key,
       required BuildContext context,
       required this.rawDraftData,
-      this.textStyle,
+      ThemeData? themeData,
       this.codeStyle,
       this.linkColor,
       this.indent = 4,
-      this.h1Style,
-      this.h2Style,
-      this.h3Style,
-      this.h4Style,
-      this.h5Style,
-      this.h6Style,
       this.orderedListItemStyle,
       this.unorderedListItemStyle,
       this.blockquoteStyle,
@@ -108,15 +85,17 @@ class DraftWidget extends StatelessWidget {
       this.customBlockQuoteWidget,
       this.customCodeBlockWidget})
       : super(key: key) {
-    TextTheme textTheme = Theme.of(context).textTheme;
-    _textRenderer = TextRenderer(textStyle ?? textTheme.bodyText1!, (textStyle ?? textTheme.bodyText1!).copyWith(color: linkColor), onTapLink: onTapLink);
-    _codeBlockRenderer = CodeBlockRenderer(codeStyle ?? textTheme.bodyText1!);
-    _h1Renderer = TextRenderer(h1Style ?? textTheme.headline1!, (h1Style ?? textTheme.headline1!).copyWith(color: linkColor));
-    _h2Renderer = TextRenderer(h2Style ?? textTheme.headline2!, (h2Style ?? textTheme.headline2!).copyWith(color: linkColor));
-    _h3Renderer = TextRenderer(h3Style ?? textTheme.headline3!, (h3Style ?? textTheme.headline3!).copyWith(color: linkColor));
-    _h4Renderer = TextRenderer(h4Style ?? textTheme.headline4!, (h4Style ?? textTheme.headline4!).copyWith(color: linkColor));
-    _h5Renderer = TextRenderer(h5Style ?? textTheme.headline5!, (h5Style ?? textTheme.headline5!).copyWith(color: linkColor));
-    _h6Renderer = TextRenderer(h6Style ?? textTheme.headline6!, (h6Style ?? textTheme.headline6!).copyWith(color: linkColor));
+    this.themeData = themeData ?? Theme.of(context);
+    TextTheme textTheme = this.themeData.textTheme;
+    TextStyle textStyle = textTheme.bodyText1!;
+    _textRenderer = TextRenderer(textStyle, textStyle.copyWith(color: linkColor), onTapLink: onTapLink);
+    _codeBlockRenderer = CodeBlockRenderer(codeStyle ?? textStyle);
+    _h1Renderer = TextRenderer(textTheme.headline1!, textTheme.headline1!.copyWith(color: linkColor));
+    _h2Renderer = TextRenderer(textTheme.headline2!, textTheme.headline2!.copyWith(color: linkColor));
+    _h3Renderer = TextRenderer(textTheme.headline3!, textTheme.headline3!.copyWith(color: linkColor));
+    _h4Renderer = TextRenderer(textTheme.headline4!, textTheme.headline4!.copyWith(color: linkColor));
+    _h5Renderer = TextRenderer(textTheme.headline5!, textTheme.headline5!.copyWith(color: linkColor));
+    _h6Renderer = TextRenderer(textTheme.headline6!, textTheme.headline6!.copyWith(color: linkColor));
     _orderedListRenderer = OrderedListRenderer(_textRenderer, indent);
     _unorderedListRenderer = UnorderedListRenderer(_textRenderer, indent);
     _blockQuoteRenderer = BlockQuoteRenderer(context, _textRenderer, customBlockQuoteWidget: customBlockQuoteWidget);
@@ -128,7 +107,8 @@ class DraftWidget extends StatelessWidget {
   List<InlineSpan> _generateSpans() {
     List<InlineSpan> result = [];
     DraftTree draftNode = DraftTree.fromJson(rawDraftData);
-    _recognizePlainLinks(draftNode);
+    _recognizePlainUrls(draftNode);
+    _recognizeMentions(draftNode);
     result.addAll(draftNode.blocks
         .map((e) {
           //insert new line between blocks
@@ -143,14 +123,13 @@ class DraftWidget extends StatelessWidget {
     return result;
   }
 
-  void _recognizePlainLinks(DraftTree draftNode) {
+  void _recognizePlainUrls(DraftTree draftNode) {
     List<DraftBlock> blocks = draftNode.blocks;
     Map<String, EntityData> entityMap = draftNode.entityMap;
     int maxKey = entityMap.keys.isEmpty ? 0 : entityMap.keys.map((e) => int.tryParse(e)).whereType<int>().reduce((value, element) => max(value, element));
     int newKey = maxKey + 1;
-    RegExp reg = RegExp(URL_REGEX);
-    for (var block in blocks) {
-      var allMatches = reg.allMatches(block.text);
+    for (DraftBlock block in blocks) {
+      var allMatches = RegExp(URL_REGEX).allMatches(block.text);
       for (RegExpMatch match in allMatches) {
         int start = match.start;
         int end = match.end;
@@ -162,11 +141,21 @@ class DraftWidget extends StatelessWidget {
           }
         }
         if (!exist) {
-          Entity entity = Entity(start, end - start, newKey);
+          Entity entity = Entity(match.start, match.end - match.start, newKey);
           entity.data = EntityData("LINK", "MUTABLE", {'url': match.input.substring(match.start, match.end)});
           block.entityRanges.add(entity);
           newKey++;
         }
+      }
+    }
+  }
+
+  void _recognizeMentions(DraftTree draftNode) {
+    List<DraftBlock> blocks = draftNode.blocks;
+    for (DraftBlock block in blocks) {
+      Iterable<RegExpMatch> allMatches = RegExp(MENTION_REGEX).allMatches(block.text);
+      for (RegExpMatch match in allMatches) {
+        block.inlineStyleRanges.add(InlineStyle(match.start, match.end - match.start, "BOLD"));
       }
     }
   }
@@ -271,7 +260,7 @@ class DraftWidget extends StatelessWidget {
   }
 
   InlineSpan _newlineSpan() {
-    return TextSpan(text: "\n", style: textStyle);
+    return TextSpan(text: "\n", style: themeData.textTheme.bodyText1);
   }
 
   @override

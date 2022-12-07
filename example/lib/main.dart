@@ -80,24 +80,6 @@ class Demo extends StatelessWidget {
                       ),
                     );
                   },
-                  customBlockQuoteWidget: (span) {
-                    return WidgetSpan(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            left: BorderSide(width: 4, color: Colors.green),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                          child: RichText(
-                            text: span,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
                   customImageWidget: (url) => ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
                     child: Image.network(

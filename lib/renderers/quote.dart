@@ -18,13 +18,13 @@ class BlockQuoteRenderer extends Renderer {
       return WidgetSpan(
         child: Container(
           width: MediaQuery.of(_context).size.width,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             border: Border(
-              left: BorderSide(width: 10, color: Theme.of(_context).primaryColor),
+              left: BorderSide(width: 4, color: Color(0xFFCAFF04)),
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(left: 10),
             child: RichText(
               text: _textRenderer.render(block),
             ),

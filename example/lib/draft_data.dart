@@ -226,7 +226,7 @@ const Map<String, dynamic> data = {
     },
     {
       "key": "6vtj2",
-      "text": "NPC Dialogue: Chef Mao",
+      "text": "NPC Dialogue: Chef Mao @Chef_mao",
       "type": "ordered-list-item",
       "depth": 0,
       "inlineStyleRanges": [],
