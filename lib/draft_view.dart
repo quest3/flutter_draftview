@@ -12,6 +12,7 @@ class DraftView extends StatelessWidget {
   static const URL_REGEX =
       r"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[.\!\/\\w]*))?)";
   static const MENTION_REGEX = r"(^|\s)@([0-9a-zA-Z._]+)";
+  static const TAG_REGEX = r"(^|\s)#([0-9a-zA-Z]+)";
 
   ///Root span. All rendered spans will be this span's children
   late final InlineSpan _rootSpan;
@@ -108,7 +109,7 @@ class DraftView extends StatelessWidget {
     List<InlineSpan> result = [];
     DraftTree draftNode = DraftTree.fromJson(rawDraftData);
     _recognizePlainUrls(draftNode);
-    _recognizeMentions(draftNode);
+    _recognizeMentionAndTags(draftNode);
     result.addAll(draftNode.blocks
         .map((e) {
           //insert new line between blocks
@@ -150,12 +151,15 @@ class DraftView extends StatelessWidget {
     }
   }
 
-  void _recognizeMentions(DraftTree draftNode) {
+  void _recognizeMentionAndTags(DraftTree draftNode) {
     List<DraftBlock> blocks = draftNode.blocks;
+    List<RegExp> regs = [RegExp(MENTION_REGEX), RegExp(TAG_REGEX)];
     for (DraftBlock block in blocks) {
-      Iterable<RegExpMatch> allMatches = RegExp(MENTION_REGEX).allMatches(block.text);
-      for (RegExpMatch match in allMatches) {
-        block.inlineStyleRanges.add(InlineStyle(match.start, match.end - match.start, "BOLD"));
+      for (var reg in regs) {
+        Iterable<RegExpMatch> allMatches = reg.allMatches(block.text);
+        for (RegExpMatch match in allMatches) {
+          block.inlineStyleRanges.add(InlineStyle(match.start, match.end - match.start, "BOLD"));
+        }
       }
     }
   }
