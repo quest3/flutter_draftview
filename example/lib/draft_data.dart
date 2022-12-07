@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 const Map<String, dynamic> data = {
   "blocks": [
     {"key": "fpjc9", "text": "Liyue", "type": "header-one", "depth": 0, "inlineStyleRanges": [], "entityRanges": [], "data": {}},
@@ -47,7 +49,7 @@ const Map<String, dynamic> data = {
     {
       "key": "df0t4",
       "text":
-          "\"The God of Contracts, senselessly slaughtered as his people watched on in horror. In the end, he will sign the contract to end all contracts.\"",
+      "\"The God of Contracts, senselessly slaughtered as his people watched on in horror. In the end, he will sign the contract to end all contracts.\"",
       "type": "blockquote",
       "depth": 0,
       "inlineStyleRanges": [],
@@ -161,7 +163,7 @@ const Map<String, dynamic> data = {
     {
       "key": "e9s5l",
       "text":
-          "In the trailer Teyvat Chapter Storyline Preview: Travail, under the title of the quest Farewell, Archaic Lord, there is a line written in Teyvat's Latin script. It reads \"Ruat caelum fiat pactum,\" which roughly means \"Let the contract be made, though the heavens fall,\" and is modified from the phrase fiat justitia ruat caelum.",
+      "In the trailer Teyvat Chapter Storyline Preview: Travail, under the title of the quest Farewell, Archaic Lord, there is a line written in Teyvat's Latin script. It reads \"Ruat caelum fiat pactum,\" which roughly means \"Let the contract be made, though the heavens fall,\" and is modified from the phrase fiat justitia ruat caelum.",
       "type": "unordered-list-item",
       "depth": 0,
       "inlineStyleRanges": [
@@ -181,7 +183,7 @@ const Map<String, dynamic> data = {
     {
       "key": "e1ens",
       "text":
-          "As of Chapter I, Liyue is the only region to ostensibly not have a ruling archon at all, after Morax faked his death in the quest Rite of Descension.",
+      "As of Chapter I, Liyue is the only region to ostensibly not have a ruling archon at all, after Morax faked his death in the quest Rite of Descension.",
       "type": "unordered-list-item",
       "depth": 0,
       "inlineStyleRanges": [
@@ -211,7 +213,7 @@ const Map<String, dynamic> data = {
     {
       "key": "81lfc",
       "text":
-          "Event Of Drink A-Dreaming World Quest: Surrounded by the Aroma of Tea\n\"What I shared with you today are mostly my own habits as an old-fashioned Liyue local.\"",
+      "Event Of Drink A-Dreaming World Quest: Surrounded by the Aroma of Tea\n\"What I shared with you today are mostly my own habits as an old-fashioned Liyue local.\"",
       "type": "ordered-list-item",
       "depth": 0,
       "inlineStyleRanges": [
@@ -420,3 +422,5 @@ const Map<String, dynamic> data = {
     }
   }
 };
+Map<String, dynamic> data2 = json.decode(
+    "{\"blocks\":[{\"key\":\"48bnc\",\"text\":\"ENS x Snapshot 🦉\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"4vu3g\",\"text\":\"🎁 2 special Giveaway\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"52bvd\",\"text\":\"1️⃣ Follow\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"au0eb\",\"text\":\"@ENS and @Snapshot\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"bsc7\",\"text\":\"3️⃣ Join Discord\\n\\nENS x Snapshot 🦉\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"bgdti\",\"text\":\"🎁 2 special Giveaway\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"95ngo\",\"text\":\"1️⃣ Follow\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"6g5rk\",\"text\":\"@ENS and @Snapshot\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"gog7\",\"text\":\"3️⃣ Join Discord\\n\\nENS x Snapshot 🦉\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"btg53\",\"text\":\"🎁 2 special Giveaway\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"6r3er\",\"text\":\"1️⃣ Follow\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"9i9fg\",\"text\":\"@ENS and @Snapshot\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}},{\"key\":\"ndrh\",\"text\":\"3️⃣ Join Discord\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}");

@@ -13,7 +13,7 @@ class TextRenderer extends Renderer {
   @override
   InlineSpan render(DraftBlock block) {
     if (block.inlineStyleRanges.isEmpty && block.entityRanges.isEmpty) {
-      return TextSpan(text: block.text, style: style);
+      return TextSpan(text: replaceKeyCapEmoji(block.text), style: style);
     } else {
       List<SplitBlock> blocks = [SplitBlock(block, 0, block.text.length, style)];
       //must apply entity data (ex. links) first so inline style can be combined with link style
@@ -38,7 +38,7 @@ class TextRenderer extends Renderer {
                   onTapLink!(e.tapData!);
                 }
               });
-        return TextSpan(text: e.text, style: e.style, recognizer: recognizer);
+        return TextSpan(text: replaceKeyCapEmoji(e.text), style: e.style, recognizer: recognizer);
       }).toList());
       Widget? alignWidget;
       if (block.inlineStyleRanges.where((e) => e.style.toLowerCase() == 'left').isNotEmpty) {
@@ -86,7 +86,6 @@ class TextRenderer extends Renderer {
           List<SplitBlock> newBlocks = [];
           for (int point in splitPoints) {
             //cut off a new segment
-            // debugPrint("splitBlock lastPartEnd=$lastPartEnd point=$point ");
             SplitBlock splitBlock = SplitBlock(block.block, lastPartEnd, point, block.style);
             if (lastPartEnd >= start && point <= end) {
               operation.proceed(splitBlock);
@@ -134,6 +133,11 @@ class TextRenderer extends Renderer {
           break;
         }
     }
+  }
+
+  ///KeyCap emoji is buggy on flutter. Will be replaced with plain numbers, for now. (2022.12)
+  String replaceKeyCapEmoji(String stringWithEmoji) {
+    return stringWithEmoji.replaceAllMapped(RegExp(r'((\u0023|\u002a|[\u0030-\u0039])\ufe0f\u20e3){1}'), (match) => "${match[2]!} ");
   }
 }
 
