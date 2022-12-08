@@ -16,10 +16,10 @@ class OrderedListRenderer extends ListRenderer {
       children: [
         Text(
           "${indentInfo.item1}${indentInfo.item2}. ",
-          style: textRenderer.style,
+          style: textRenderer.defaultStyle,
         ),
         Expanded(
-          child: Text.rich(TextSpan(style: textRenderer.style, children: (span.children == null || span.children!.isEmpty) ? [span] : span.children)),
+          child: Text.rich(TextSpan(style: textRenderer.defaultStyle, children: (span.children == null || span.children!.isEmpty) ? [span] : span.children)),
         ),
       ],
     ));
@@ -39,10 +39,10 @@ class UnorderedListRenderer extends ListRenderer {
       children: [
         Text(
           "${indentInfo.item1}• ",
-          style: textRenderer.style,
+          style: textRenderer.defaultStyle,
         ),
         Expanded(
-          child: Text.rich(TextSpan(style: textRenderer.style, children: (span.children == null || span.children!.isEmpty) ? [span] : span.children)),
+          child: Text.rich(TextSpan(style: textRenderer.defaultStyle, children: (span.children == null || span.children!.isEmpty) ? [span] : span.children)),
         ),
       ],
     ));

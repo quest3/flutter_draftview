@@ -4,18 +4,27 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class TextRenderer extends Renderer {
-  final TextStyle style;
+  final TextStyle defaultStyle;
+  final TextStyle boldStyle;
+  final TextStyle italicStyle;
+  final TextStyle highlightedStyle;
   final TextStyle linkStyle;
   final Function(Map<String, dynamic> data)? onTapLink;
 
-  TextRenderer(this.style, this.linkStyle, {this.onTapLink});
+  TextRenderer(
+      {required this.defaultStyle,
+      required this.boldStyle,
+      required this.italicStyle,
+      required this.highlightedStyle,
+      required this.linkStyle,
+      this.onTapLink});
 
   @override
   InlineSpan render(DraftBlock block) {
     if (block.inlineStyleRanges.isEmpty && block.entityRanges.isEmpty) {
-      return TextSpan(text: replaceKeyCapEmoji(block.text), style: style);
+      return TextSpan(text: replaceKeyCapEmoji(block.text), style: defaultStyle);
     } else {
-      List<SplitBlock> blocks = [SplitBlock(block, 0, block.text.length, style)];
+      List<SplitBlock> blocks = [SplitBlock(block, 0, block.text.length, defaultStyle)];
       //must apply entity data (ex. links) first so inline style can be combined with link style
       _split(
           blocks,
@@ -124,12 +133,17 @@ class TextRenderer extends Renderer {
         }
       case "italic":
         {
-          block.style = block.style.copyWith(fontStyle: FontStyle.italic);
+          block.style = italicStyle;
           break;
         }
       case "bold":
         {
-          block.style = block.style.copyWith(fontWeight: FontWeight.bold);
+          block.style = boldStyle;
+          break;
+        }
+      case "highlighted":
+        {
+          block.style = highlightedStyle;
           break;
         }
     }

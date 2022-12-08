@@ -1,11 +1,7 @@
 import 'dart:math';
 
 import 'package:draft_view/models.dart';
-import 'package:draft_view/renderers/atomic.dart';
-import 'package:draft_view/renderers/code.dart';
-import 'package:draft_view/renderers/list.dart';
-import 'package:draft_view/renderers/quote.dart';
-import 'package:draft_view/renderers/text.dart';
+import 'package:draft_view/theme.dart';
 import 'package:flutter/material.dart';
 
 class DraftView extends StatelessWidget {
@@ -20,88 +16,30 @@ class DraftView extends StatelessWidget {
   ///Input json data
   final Map<String, dynamic> rawDraftData;
 
-  ///Theme data. TextStyle bodyText1 and  headline1 ~ headline6 must be set
-  late final ThemeData themeData;
+  ///Theme
+  final DraftViewTheme draftViewTheme;
 
-  ///Text style for code block
-  final TextStyle? codeStyle;
+  late final Renderers _renderers;
 
-  ///Links' color. Leave null to be same color as textStyle
-  final Color? linkColor;
-
-  ///Amount of spaces for one indent, default 4
-  final int indent;
-
-  ///Text style for ordered-list-item
-  final TextStyle? orderedListItemStyle;
-
-  ///Text style for unordered-list-item
-  final TextStyle? unorderedListItemStyle;
-
-  ///Text style for blockquote
-  final TextStyle? blockquoteStyle;
-
-  ///Callback for tapping link
-  final Function(Map<String, dynamic> data)? onTapLink;
-
-  ///Callback for tapping image
-  final Function(String url)? onTapImage;
-
-  ///Customized function to create widget for image
-  final Widget Function(String url)? customImageWidget;
-
-  ///Customized function to create widget for blockquote
-  final WidgetSpan Function(InlineSpan span)? customBlockQuoteWidget;
-
-  ///Customized function to create widget for code-block
-  final WidgetSpan Function(InlineSpan span)? customCodeBlockWidget;
-
-  late final TextRenderer _textRenderer;
-  late final TextRenderer _h1Renderer;
-  late final TextRenderer _h2Renderer;
-  late final TextRenderer _h3Renderer;
-  late final TextRenderer _h4Renderer;
-  late final TextRenderer _h5Renderer;
-  late final TextRenderer _h6Renderer;
-  late final CodeBlockRenderer _codeBlockRenderer;
-  late final OrderedListRenderer _orderedListRenderer;
-  late final UnorderedListRenderer _unorderedListRenderer;
-  late final BlockQuoteRenderer _blockQuoteRenderer;
-  late final ImageRenderer _imageRenderer;
-
-  DraftView(
-      {Key? key,
-      required BuildContext context,
-      required this.rawDraftData,
-      ThemeData? themeData,
-      this.codeStyle,
-      this.linkColor,
-      this.indent = 4,
-      this.orderedListItemStyle,
-      this.unorderedListItemStyle,
-      this.blockquoteStyle,
-      this.onTapLink,
-      this.onTapImage,
-      this.customImageWidget,
-      this.customBlockQuoteWidget,
-      this.customCodeBlockWidget})
-      : super(key: key) {
-    this.themeData = themeData ?? Theme.of(context);
-    TextTheme textTheme = this.themeData.textTheme;
-    TextStyle textStyle = textTheme.bodyText1!;
-    _textRenderer = TextRenderer(textStyle, textStyle.copyWith(color: linkColor), onTapLink: onTapLink);
-    _codeBlockRenderer = CodeBlockRenderer(codeStyle ?? textStyle);
-    _h1Renderer = TextRenderer(textTheme.headline1!, textTheme.headline1!.copyWith(color: linkColor));
-    _h2Renderer = TextRenderer(textTheme.headline2!, textTheme.headline2!.copyWith(color: linkColor));
-    _h3Renderer = TextRenderer(textTheme.headline3!, textTheme.headline3!.copyWith(color: linkColor));
-    _h4Renderer = TextRenderer(textTheme.headline4!, textTheme.headline4!.copyWith(color: linkColor));
-    _h5Renderer = TextRenderer(textTheme.headline5!, textTheme.headline5!.copyWith(color: linkColor));
-    _h6Renderer = TextRenderer(textTheme.headline6!, textTheme.headline6!.copyWith(color: linkColor));
-    _orderedListRenderer = OrderedListRenderer(_textRenderer, indent);
-    _unorderedListRenderer = UnorderedListRenderer(_textRenderer, indent);
-    _blockQuoteRenderer = BlockQuoteRenderer(context, _textRenderer, customBlockQuoteWidget: customBlockQuoteWidget);
-    _imageRenderer = ImageRenderer(_textRenderer, onTapImage: onTapImage, customImageWidget: customImageWidget);
-
+  DraftView({
+    Key? key,
+    required BuildContext context,
+    required this.rawDraftData,
+    required this.draftViewTheme,
+    Function(Map<String, dynamic> data)? onTapLink,
+    Function(String url)? onTapImage,
+    Widget Function(String url)? customImageWidget,
+    WidgetSpan Function(InlineSpan span)? customBlockQuoteWidget,
+    WidgetSpan Function(InlineSpan span)? customCodeBlockWidget,
+  }) : super(key: key) {
+    _renderers = draftViewTheme.buildRenderers(
+      context: context,
+      onTapLink: onTapLink,
+      onTapImage: onTapImage,
+      customImageWidget: customImageWidget,
+      customBlockQuoteWidget: customBlockQuoteWidget,
+      customCodeBlockWidget: customCodeBlockWidget,
+    );
     _rootSpan = TextSpan(children: _generateSpans());
   }
 
@@ -158,7 +96,8 @@ class DraftView extends StatelessWidget {
       for (var reg in regs) {
         Iterable<RegExpMatch> allMatches = reg.allMatches(block.text);
         for (RegExpMatch match in allMatches) {
-          block.inlineStyleRanges.add(InlineStyle(match.start, match.end - match.start, "BOLD"));
+          // block.inlineStyleRanges.add(InlineStyle(match.start, match.end - match.start, "BOLD"));
+          block.inlineStyleRanges.add(InlineStyle(match.start, match.end - match.start, "HIGHLIGHTED"));
         }
       }
     }
@@ -175,96 +114,96 @@ class DraftView extends StatelessWidget {
               switch (entityData.type.toLowerCase()) {
                 case "image":
                   {
-                    span = _imageRenderer.render(e);
+                    span = _renderers.imageRenderer.render(e);
                     break;
                   }
                 //other types
                 default:
                   {
-                    span = _textRenderer.render(e);
+                    span = _renderers.textRenderer.render(e);
                     break;
                   }
               }
             } else {
-              span = _textRenderer.render(e);
+              span = _renderers.textRenderer.render(e);
             }
           } else {
-            span = _textRenderer.render(e);
+            span = _renderers.textRenderer.render(e);
           }
           break;
         }
       case BlockType.ordered_list_item:
         {
-          span = _orderedListRenderer.render(e);
+          span = _renderers.orderedListRenderer.render(e);
           // _orderedListRenderer.index++;
           break;
         }
       case BlockType.unordered_list_item:
         {
-          span = _unorderedListRenderer.render(e);
+          span = _renderers.unorderedListRenderer.render(e);
           break;
         }
       case BlockType.blockquote:
         {
-          span = _blockQuoteRenderer.render(e);
+          span = _renderers.blockQuoteRenderer.render(e);
           break;
         }
       case BlockType.code_block:
         {
-          span = _codeBlockRenderer.render(e);
+          span = _renderers.codeBlockRenderer.render(e);
           break;
         }
       case BlockType.header1:
         {
-          span = _h1Renderer.render(e);
+          span = _renderers.h1Renderer.render(e);
           break;
         }
       case BlockType.header2:
         {
-          span = _h2Renderer.render(e);
+          span = _renderers.h2Renderer.render(e);
           break;
         }
       case BlockType.header3:
         {
-          span = _h3Renderer.render(e);
+          span = _renderers.h3Renderer.render(e);
           break;
         }
       case BlockType.header4:
         {
-          span = _h4Renderer.render(e);
+          span = _renderers.h4Renderer.render(e);
           break;
         }
       case BlockType.header5:
         {
-          span = _h5Renderer.render(e);
+          span = _renderers.h5Renderer.render(e);
           break;
         }
       case BlockType.header6:
         {
-          span = _h6Renderer.render(e);
+          span = _renderers.h6Renderer.render(e);
           break;
         }
       case BlockType.unknown:
         {
-          span = _textRenderer.render(DraftBlock("key", "<unknown>", "", 0, [], []));
+          span = _renderers.textRenderer.render(DraftBlock("key", "<unknown>", "", 0, [], []));
           break;
         }
       case BlockType.unstyled:
       case BlockType.paragraph:
       default:
         {
-          span = _textRenderer.render(e);
+          span = _renderers.textRenderer.render(e);
           break;
         }
     }
     if (e.type != BlockType.ordered_list_item) {
-      _orderedListRenderer.resetIndex();
+      _renderers.orderedListRenderer.resetIndex();
     }
     return span;
   }
 
   InlineSpan _newlineSpan() {
-    return TextSpan(text: "\n", style: themeData.textTheme.bodyText1);
+    return TextSpan(text: "\n", style: draftViewTheme.textStyle);
   }
 
   @override
