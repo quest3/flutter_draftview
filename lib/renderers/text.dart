@@ -9,7 +9,7 @@ class TextRenderer extends Renderer {
   final TextStyle italicStyle;
   final TextStyle highlightedStyle;
   final TextStyle linkStyle;
-  final Function(Map<String, dynamic> data)? onTapLink;
+  final Function(String url, Map<String, dynamic> data)? onTapLink;
 
   TextRenderer(
       {required this.defaultStyle,
@@ -44,7 +44,7 @@ class TextRenderer extends Renderer {
             : (TapGestureRecognizer()
               ..onTap = () {
                 if (onTapLink != null) {
-                  onTapLink!(e.tapData!);
+                  onTapLink!(e.tapData!['url'], e.tapData!);
                 }
               });
         return TextSpan(text: replaceKeyCapEmoji(e.text), style: e.style, recognizer: recognizer);

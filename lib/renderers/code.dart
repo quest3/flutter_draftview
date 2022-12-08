@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 
 class CodeBlockRenderer extends Renderer {
   final TextRenderer _textRenderer;
-  final WidgetSpan Function(InlineSpan span)? customCodeBlockWidget;
+  final WidgetSpan Function(InlineSpan span)? codeBlockBuilder;
 
-  CodeBlockRenderer(this._textRenderer, {this.customCodeBlockWidget});
+  CodeBlockRenderer(this._textRenderer, {this.codeBlockBuilder});
 
   @override
   InlineSpan render(DraftBlock block) {
-    if (customCodeBlockWidget != null) {
-      return customCodeBlockWidget!(_textRenderer.render(block));
+    if (codeBlockBuilder != null) {
+      return codeBlockBuilder!(_textRenderer.render(block));
     } else {
       return WidgetSpan(
           child: Container(

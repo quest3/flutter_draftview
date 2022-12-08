@@ -75,16 +75,16 @@ class DraftViewTheme {
 
   Renderers buildRenderers({
     required BuildContext context,
-    Function(Map<String, dynamic> data)? onTapLink,
+    Function(String url, Map<String, dynamic> data)? onTapLink,
     Function(String url)? onTapImage,
-    Widget Function(String url)? customImageWidget,
-    WidgetSpan Function(InlineSpan span)? customBlockQuoteWidget,
-    WidgetSpan Function(InlineSpan span)? customCodeBlockWidget,
+    Widget Function(String url)? imageBuilder,
+    WidgetSpan Function(InlineSpan span)? blockquoteBuilder,
+    WidgetSpan Function(InlineSpan span)? codeBlockBuilder,
   }) {
     TextTheme textTheme = Theme.of(context).textTheme;
     Renderers renderers = Renderers();
     renderers.textRenderer = buildTextRenderer(baseStyle: textStyle ?? textTheme.bodyText1!, onTapLink: onTapLink);
-    renderers.codeBlockRenderer = CodeBlockRenderer(buildTextRenderer(baseStyle: codeStyle ?? textTheme.bodyText1!));
+    renderers.codeBlockRenderer = CodeBlockRenderer(buildTextRenderer(baseStyle: codeStyle ?? textTheme.bodyText1!), codeBlockBuilder: codeBlockBuilder);
     renderers.h1Renderer = buildTextRenderer(baseStyle: h1Style ?? textTheme.headline1!, onTapLink: onTapLink);
     renderers.h2Renderer = buildTextRenderer(baseStyle: h2Style ?? textTheme.headline2!, onTapLink: onTapLink);
     renderers.h3Renderer = buildTextRenderer(baseStyle: h3Style ?? textTheme.headline3!, onTapLink: onTapLink);
@@ -97,12 +97,12 @@ class DraftViewTheme {
         unorderedListItemStyle == null ? renderers.textRenderer : buildTextRenderer(baseStyle: unorderedListItemStyle!, onTapLink: onTapLink), indent);
     renderers.blockQuoteRenderer = BlockQuoteRenderer(
         context, blockquoteStyle == null ? renderers.textRenderer : buildTextRenderer(baseStyle: blockquoteStyle!, onTapLink: onTapLink),
-        customBlockQuoteWidget: customBlockQuoteWidget);
-    renderers.imageRenderer = ImageRenderer(renderers.textRenderer, onTapImage: onTapImage, customImageWidget: customImageWidget);
+        blockquoteBuilder: blockquoteBuilder);
+    renderers.imageRenderer = ImageRenderer(renderers.textRenderer, onTapImage: onTapImage, imageBuilder: imageBuilder);
     return renderers;
   }
 
-  TextRenderer buildTextRenderer({required TextStyle baseStyle, Function(Map<String, dynamic> data)? onTapLink}) {
+  TextRenderer buildTextRenderer({required TextStyle baseStyle, Function(String url, Map<String, dynamic> data)? onTapLink}) {
     TextStyle boldStyle2 = boldStyle ?? baseStyle.copyWith(fontWeight: FontWeight.bold);
     TextStyle italicStyle2 = italicStyle ?? baseStyle.copyWith(fontStyle: FontStyle.italic);
     TextStyle highlightedStyle2 = highlightedStyle ?? boldStyle2;

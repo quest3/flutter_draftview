@@ -5,10 +5,10 @@ import 'package:draft_view/theme.dart';
 import 'package:flutter/material.dart';
 
 class DraftView extends StatelessWidget {
-  static const URL_REGEX =
+  static const urlRegex =
       r"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[.\!\/\\w]*))?)";
-  static const MENTION_REGEX = r"(^|\s)@([0-9a-zA-Z._]+)";
-  static const TAG_REGEX = r"(^|\s)#([0-9a-zA-Z]+)";
+  static const mentionRegex = r"(^|\s)@([0-9a-zA-Z._]+)";
+  static const tagRegex = r"(^|\s)#([0-9a-zA-Z]+)";
 
   ///Root span. All rendered spans will be this span's children
   late final InlineSpan _rootSpan;
@@ -26,19 +26,19 @@ class DraftView extends StatelessWidget {
     required BuildContext context,
     required this.rawDraftData,
     required this.draftViewTheme,
-    Function(Map<String, dynamic> data)? onTapLink,
+    Function(String url, Map<String, dynamic> data)? onTapLink,
     Function(String url)? onTapImage,
-    Widget Function(String url)? customImageWidget,
-    WidgetSpan Function(InlineSpan span)? customBlockQuoteWidget,
-    WidgetSpan Function(InlineSpan span)? customCodeBlockWidget,
+    Widget Function(String url)? imageBuilder,
+    WidgetSpan Function(InlineSpan span)? blockquoteBuilder,
+    WidgetSpan Function(InlineSpan span)? codeBlockBuilder,
   }) : super(key: key) {
     _renderers = draftViewTheme.buildRenderers(
       context: context,
       onTapLink: onTapLink,
       onTapImage: onTapImage,
-      customImageWidget: customImageWidget,
-      customBlockQuoteWidget: customBlockQuoteWidget,
-      customCodeBlockWidget: customCodeBlockWidget,
+      imageBuilder: imageBuilder,
+      blockquoteBuilder: blockquoteBuilder,
+      codeBlockBuilder: codeBlockBuilder,
     );
     _rootSpan = TextSpan(children: _generateSpans());
   }
@@ -68,7 +68,7 @@ class DraftView extends StatelessWidget {
     int maxKey = entityMap.keys.isEmpty ? 0 : entityMap.keys.map((e) => int.tryParse(e)).whereType<int>().reduce((value, element) => max(value, element));
     int newKey = maxKey + 1;
     for (DraftBlock block in blocks) {
-      var allMatches = RegExp(URL_REGEX).allMatches(block.text);
+      var allMatches = RegExp(urlRegex).allMatches(block.text);
       for (RegExpMatch match in allMatches) {
         int start = match.start;
         int end = match.end;
@@ -91,7 +91,7 @@ class DraftView extends StatelessWidget {
 
   void _recognizeMentionAndTags(DraftTree draftNode) {
     List<DraftBlock> blocks = draftNode.blocks;
-    List<RegExp> regs = [RegExp(MENTION_REGEX), RegExp(TAG_REGEX)];
+    List<RegExp> regs = [RegExp(mentionRegex), RegExp(tagRegex)];
     for (DraftBlock block in blocks) {
       for (var reg in regs) {
         Iterable<RegExpMatch> allMatches = reg.allMatches(block.text);

@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 
 class ImageRenderer extends Renderer {
   final TextRenderer _textRenderer;
-  final Widget Function(String)? customImageWidget;
+  final Widget Function(String)? imageBuilder;
   final Function(String url)? onTapImage;
 
-  ImageRenderer(this._textRenderer, {this.customImageWidget, this.onTapImage});
+  ImageRenderer(this._textRenderer, {this.imageBuilder, this.onTapImage});
 
   @override
   InlineSpan render(DraftBlock block) {
@@ -16,8 +16,8 @@ class ImageRenderer extends Renderer {
     url = block.entityRanges.first.data?.data['src'];
     if (url != null) {
       Widget widget;
-      if (customImageWidget != null) {
-        widget = customImageWidget!(url);
+      if (imageBuilder != null) {
+        widget = imageBuilder!(url);
       } else {
         widget = Image.network(
           url,

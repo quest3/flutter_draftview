@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 class BlockQuoteRenderer extends Renderer {
   final TextRenderer _textRenderer;
   final BuildContext _context;
-  final WidgetSpan Function(InlineSpan span)? customBlockQuoteWidget;
+  final WidgetSpan Function(InlineSpan span)? blockquoteBuilder;
 
-  BlockQuoteRenderer(this._context, this._textRenderer, {this.customBlockQuoteWidget});
+  BlockQuoteRenderer(this._context, this._textRenderer, {this.blockquoteBuilder});
 
   @override
   InlineSpan render(DraftBlock block) {
-    if (customBlockQuoteWidget != null) {
-      return customBlockQuoteWidget!(_textRenderer.render(block));
+    if (blockquoteBuilder != null) {
+      return blockquoteBuilder!(_textRenderer.render(block));
     } else {
       return WidgetSpan(
         child: Container(

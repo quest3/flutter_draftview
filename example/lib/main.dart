@@ -86,7 +86,7 @@ class Demo extends StatelessWidget {
                         ),
                       );
                     },
-                    onTapLink: (data) {
+                    onTapLink: (url, data) {
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -97,7 +97,7 @@ class Demo extends StatelessWidget {
                         ),
                       );
                     },
-                    customImageWidget: (url) => ClipRRect(
+                    imageBuilder: (url) => ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
                       child: Image.network(
                         url,
