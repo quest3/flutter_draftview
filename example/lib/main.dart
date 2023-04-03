@@ -44,11 +44,20 @@ class Demo extends StatelessWidget {
               child: SafeArea(
                 child: Material(
                   child: DraftView(
-                    rawDraftData: data,
+                    rawDraftData: data2,
                     draftViewTheme: const DraftViewTheme(
-                      textStyle: TextStyle(fontSize: 14, color: Colors.black, height: 1.5),
-                      boldStyle: TextStyle(fontSize: 14, color: Colors.black, height: 1.5, fontWeight: FontWeight.bold),
-                      italicStyle: TextStyle(fontSize: 14, color: Colors.black, height: 1.5, fontStyle: FontStyle.italic),
+                      textStyle: TextStyle(
+                          fontSize: 14, color: Colors.black, height: 1.5),
+                      boldStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          height: 1.5,
+                          fontWeight: FontWeight.bold),
+                      italicStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          height: 1.5,
+                          fontStyle: FontStyle.italic),
                       highlightedStyle: TextStyle(
                         fontSize: 14,
                         color: Colors.black,

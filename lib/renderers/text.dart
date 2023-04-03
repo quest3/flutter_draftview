@@ -1,3 +1,4 @@
+import 'package:draft_view/extensions.dart';
 import 'package:draft_view/models.dart';
 import 'package:draft_view/renderers/base.dart';
 import 'package:flutter/gestures.dart';
@@ -11,44 +12,50 @@ class TextRenderer extends Renderer {
   final TextStyle linkStyle;
   final Function(String url, Map<String, dynamic> data)? onTapLink;
 
-  TextRenderer(
-      {required this.defaultStyle,
-      required this.boldStyle,
-      required this.italicStyle,
-      required this.highlightedStyle,
-      required this.linkStyle,
-      this.onTapLink});
+  TextRenderer({required this.defaultStyle,
+    required this.boldStyle,
+    required this.italicStyle,
+    required this.highlightedStyle,
+    required this.linkStyle,
+    this.onTapLink});
 
   @override
   InlineSpan render(DraftBlock block) {
     if (block.inlineStyleRanges.isEmpty && block.entityRanges.isEmpty) {
       return TextSpan(text: replaceKeyCapEmoji(block.text), style: defaultStyle);
     } else {
-      List<SplitBlock> blocks = [SplitBlock(block, 0, block.text.length, defaultStyle)];
+      List<SplitBlock> blocks = [
+        SplitBlock(block, 0, block.text.compatLength, defaultStyle)
+      ];
       //must apply entity data (ex. links) first so inline style can be combined with link style
       _split(
           blocks,
           block.entityRanges
-              .map((entity) => SplitOperation(offset: entity.offset, length: entity.length, proceed: (block) => _applyEntity(block, entity)))
+              .map((entity) => SplitOperation(
+                  offset: entity.offset,
+                  length: entity.length,
+                  proceed: (block) => _applyEntity(block, entity)))
               .toList());
       _split(
           blocks,
           block.inlineStyleRanges
-              .map((inlineStyle) => SplitOperation(offset: inlineStyle.offset, length: inlineStyle.length, proceed: (block) => _applyStyle(block, inlineStyle)))
+              .map((inlineStyle) => SplitOperation(
+                  offset: inlineStyle.offset,
+                  length: inlineStyle.length,
+                  proceed: (block) => _applyStyle(block, inlineStyle)))
               .toList());
-
       TextSpan textSpan = TextSpan(
           children: blocks.map((e) {
-        TapGestureRecognizer? recognizer = e.tapData == null
-            ? null
-            : (TapGestureRecognizer()
+            TapGestureRecognizer? recognizer = e.tapData == null
+                ? null
+                : (TapGestureRecognizer()
               ..onTap = () {
                 if (onTapLink != null) {
                   onTapLink!(e.tapData!['url'], e.tapData!);
                 }
               });
-        return TextSpan(text: replaceKeyCapEmoji(e.text), style: e.style, recognizer: recognizer);
-      }).toList());
+            return TextSpan(text: replaceKeyCapEmoji(e.text), style: e.style, recognizer: recognizer);
+          }).toList());
       Widget? alignWidget;
       if (block.inlineStyleRanges.where((e) => e.style.toLowerCase() == 'left').isNotEmpty) {
         alignWidget = Align(
@@ -175,13 +182,11 @@ class SplitBlock {
   ///data for gesture
   Map<String, dynamic>? tapData;
 
-  SplitBlock(
-    this.block,
-    this.start,
-    this.end,
-    this.style,
-  ) {
-    text = block.text.substring(start, end);
+  SplitBlock(this.block,
+      this.start,
+      this.end,
+      this.style,) {
+    text = block.text.compatSubstring(start, end);
   }
 }
 
