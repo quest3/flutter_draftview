@@ -1,9 +1,6 @@
-import 'package:draft_view/renderers/atomic.dart';
-import 'package:draft_view/renderers/code.dart';
-import 'package:draft_view/renderers/list.dart';
-import 'package:draft_view/renderers/quote.dart';
-import 'package:draft_view/renderers/text.dart';
 import 'package:flutter/material.dart';
+
+import 'renderers/renderers.dart';
 
 class DraftViewTheme {
   ///Default text style
@@ -73,60 +70,225 @@ class DraftViewTheme {
     this.blockquoteStyle,
   });
 
-  Renderers buildRenderers({
+  DraftViewTheme get draftTheme {
+    const double lineHeight = 1.35;
+    const bigStyle = TextStyle(
+      fontSize: 17,
+      height: lineHeight,
+      color: Colors.black,
+      fontWeight: FontWeight.w700,
+    );
+    const bold20 = TextStyle(
+      fontSize: 20,
+      color: Colors.black,
+      fontWeight: FontWeight.w700,
+      height: lineHeight,
+    );
+    const bold15 = TextStyle(
+      fontSize: 15,
+      color: Colors.black,
+      fontWeight: FontWeight.w700,
+      height: lineHeight,
+    );
+    const medium15 = TextStyle(
+      fontSize: 15,
+      color: Colors.black,
+      fontWeight: FontWeight.w500,
+      height: lineHeight,
+    );
+    const regular15 = TextStyle(
+      fontSize: 15,
+      color: Colors.black,
+      fontWeight: FontWeight.w400,
+      height: lineHeight,
+    );
+
+    return DraftViewTheme(
+      textStyle: textStyle ?? medium15,
+      boldStyle: boldStyle ?? bold15,
+      italicStyle:
+          italicStyle ?? medium15.copyWith(fontStyle: FontStyle.italic),
+      highlightedStyle: highlightedStyle ?? bold15,
+      codeStyle: codeStyle ?? regular15,
+      linkColor: linkColor ?? Colors.black,
+      indent: indent,
+      h1Style: h1Style ?? bold20,
+      h2Style: h2Style ?? bigStyle,
+      h3Style: h3Style ?? bigStyle,
+      h4Style: h4Style ?? bigStyle,
+      h5Style: h5Style ?? bigStyle,
+      h6Style: h6Style ?? bigStyle,
+      orderedListItemStyle: orderedListItemStyle,
+      unorderedListItemStyle: unorderedListItemStyle,
+      blockquoteStyle:
+          blockquoteStyle ?? regular15.copyWith(fontStyle: FontStyle.italic),
+    );
+  }
+
+  static TextRenderer textRenderer(
+    DraftViewTheme theme, {
+    TextStyle? baseStyle,
+    bool replace = true,
+    Function(String url, Map<String, dynamic> data)? onTapLink,
+  }) {
+    final textStyle = baseStyle ?? theme.textStyle!;
+    return TextRenderer(
+      defaultStyle: textStyle,
+      boldStyle: (!replace && baseStyle != null ? baseStyle : null) ??
+          theme.boldStyle!,
+      italicStyle: (!replace && baseStyle != null
+              ? baseStyle.copyWith(fontStyle: FontStyle.italic)
+              : null) ??
+          theme.italicStyle!,
+      highlightedStyle: (!replace && baseStyle != null ? baseStyle : null) ??
+          theme.highlightedStyle!,
+      linkStyle: textStyle.copyWith(
+        color: theme.linkColor,
+        decoration: TextDecoration.underline,
+      ),
+      onTapLink: onTapLink,
+    );
+  }
+}
+
+class Renderers {
+  final TextRenderer textRenderer;
+  final TextRenderer h1Renderer;
+  final TextRenderer h2Renderer;
+  final TextRenderer h3Renderer;
+  final TextRenderer h4Renderer;
+  final TextRenderer h5Renderer;
+  final TextRenderer h6Renderer;
+  final CodeBlockRenderer codeBlockRenderer;
+  final OrderedListRenderer orderedListRenderer;
+  final UnorderedListRenderer unorderedListRenderer;
+  final BlockQuoteRenderer blockQuoteRenderer;
+  final ImageRenderer imageRenderer;
+
+  factory Renderers.fromTheme({
     required BuildContext context,
+    required DraftViewTheme theme,
     Function(String url, Map<String, dynamic> data)? onTapLink,
     Function(String url)? onTapImage,
     Widget Function(String url)? imageBuilder,
     WidgetSpan Function(InlineSpan span)? blockquoteBuilder,
     WidgetSpan Function(InlineSpan span)? codeBlockBuilder,
   }) {
-    TextTheme textTheme = Theme.of(context).textTheme;
-    Renderers renderers = Renderers();
-    renderers.textRenderer = buildTextRenderer(baseStyle: textStyle ?? textTheme.bodyText1!, onTapLink: onTapLink);
-    renderers.codeBlockRenderer = CodeBlockRenderer(buildTextRenderer(baseStyle: codeStyle ?? textTheme.bodyText1!), codeBlockBuilder: codeBlockBuilder);
-    renderers.h1Renderer = buildTextRenderer(baseStyle: h1Style ?? textTheme.headline1!, onTapLink: onTapLink);
-    renderers.h2Renderer = buildTextRenderer(baseStyle: h2Style ?? textTheme.headline2!, onTapLink: onTapLink);
-    renderers.h3Renderer = buildTextRenderer(baseStyle: h3Style ?? textTheme.headline3!, onTapLink: onTapLink);
-    renderers.h4Renderer = buildTextRenderer(baseStyle: h4Style ?? textTheme.headline4!, onTapLink: onTapLink);
-    renderers.h5Renderer = buildTextRenderer(baseStyle: h5Style ?? textTheme.headline5!, onTapLink: onTapLink);
-    renderers.h6Renderer = buildTextRenderer(baseStyle: h6Style ?? textTheme.headline6!, onTapLink: onTapLink);
-    renderers.orderedListRenderer = OrderedListRenderer(
-        orderedListItemStyle == null ? renderers.textRenderer : buildTextRenderer(baseStyle: orderedListItemStyle!, onTapLink: onTapLink), indent);
-    renderers.unorderedListRenderer = UnorderedListRenderer(
-        unorderedListItemStyle == null ? renderers.textRenderer : buildTextRenderer(baseStyle: unorderedListItemStyle!, onTapLink: onTapLink), indent);
-    renderers.blockQuoteRenderer = BlockQuoteRenderer(
-        context, blockquoteStyle == null ? renderers.textRenderer : buildTextRenderer(baseStyle: blockquoteStyle!, onTapLink: onTapLink),
-        blockquoteBuilder: blockquoteBuilder);
-    renderers.imageRenderer = ImageRenderer(renderers.textRenderer, onTapImage: onTapImage, imageBuilder: imageBuilder);
-    return renderers;
+    final draftTheme = theme.draftTheme;
+    final textRenderer = DraftViewTheme.textRenderer(
+      draftTheme,
+      onTapLink: onTapLink,
+    );
+
+    final h1Renderer = DraftViewTheme.textRenderer(
+      draftTheme,
+      baseStyle: draftTheme.h1Style,
+      onTapLink: onTapLink,
+      replace: false,
+    );
+    final h2Renderer = DraftViewTheme.textRenderer(
+      draftTheme,
+      baseStyle: draftTheme.h2Style,
+      onTapLink: onTapLink,
+      replace: false,
+    );
+    final h3Renderer = DraftViewTheme.textRenderer(
+      draftTheme,
+      baseStyle: draftTheme.h3Style,
+      onTapLink: onTapLink,
+      replace: false,
+    );
+    final h4Renderer = DraftViewTheme.textRenderer(
+      draftTheme,
+      baseStyle: draftTheme.h4Style,
+      onTapLink: onTapLink,
+      replace: false,
+    );
+    final h5Renderer = DraftViewTheme.textRenderer(
+      draftTheme,
+      baseStyle: draftTheme.h5Style,
+      onTapLink: onTapLink,
+      replace: false,
+    );
+    final h6Renderer = DraftViewTheme.textRenderer(
+      draftTheme,
+      baseStyle: draftTheme.h6Style,
+      onTapLink: onTapLink,
+      replace: false,
+    );
+
+    final orderedListRenderer = OrderedListRenderer(
+      draftTheme.orderedListItemStyle == null
+          ? textRenderer
+          : DraftViewTheme.textRenderer(
+              draftTheme,
+              baseStyle: draftTheme.orderedListItemStyle,
+              onTapLink: onTapLink,
+            ),
+      draftTheme.indent,
+    );
+    final unorderedListRenderer = UnorderedListRenderer(
+      draftTheme.unorderedListItemStyle == null
+          ? textRenderer
+          : DraftViewTheme.textRenderer(
+              draftTheme,
+              baseStyle: draftTheme.unorderedListItemStyle,
+              onTapLink: onTapLink,
+            ),
+      draftTheme.indent,
+    );
+
+    final codeBlockRenderer = CodeBlockRenderer(
+      DraftViewTheme.textRenderer(
+        draftTheme,
+        baseStyle: draftTheme.codeStyle,
+        onTapLink: onTapLink,
+      ),
+      codeBlockBuilder: codeBlockBuilder,
+    );
+    final blockQuoteRenderer = BlockQuoteRenderer(
+      context,
+      DraftViewTheme.textRenderer(
+        draftTheme,
+        baseStyle: draftTheme.blockquoteStyle,
+        onTapLink: onTapLink,
+      ),
+      blockquoteBuilder: blockquoteBuilder,
+    );
+
+    final imageRenderer = ImageRenderer(
+      textRenderer,
+      onTapImage: onTapImage,
+      imageBuilder: imageBuilder,
+    );
+    return Renderers._internal(
+      textRenderer: textRenderer,
+      h1Renderer: h1Renderer,
+      h2Renderer: h2Renderer,
+      h3Renderer: h3Renderer,
+      h4Renderer: h4Renderer,
+      h5Renderer: h5Renderer,
+      h6Renderer: h6Renderer,
+      codeBlockRenderer: codeBlockRenderer,
+      orderedListRenderer: orderedListRenderer,
+      unorderedListRenderer: unorderedListRenderer,
+      blockQuoteRenderer: blockQuoteRenderer,
+      imageRenderer: imageRenderer,
+    );
   }
 
-  TextRenderer buildTextRenderer({required TextStyle baseStyle, Function(String url, Map<String, dynamic> data)? onTapLink}) {
-    TextStyle boldStyle2 = boldStyle ?? baseStyle.copyWith(fontWeight: FontWeight.bold);
-    TextStyle italicStyle2 = italicStyle ?? baseStyle.copyWith(fontStyle: FontStyle.italic);
-    TextStyle highlightedStyle2 = highlightedStyle ?? boldStyle2;
-    return TextRenderer(
-        defaultStyle: baseStyle,
-        boldStyle: boldStyle2,
-        italicStyle: italicStyle2,
-        highlightedStyle: highlightedStyle2,
-        linkStyle: baseStyle.copyWith(color: linkColor),
-        onTapLink: onTapLink);
-  }
-}
-
-class Renderers {
-  late final TextRenderer textRenderer;
-  late final TextRenderer h1Renderer;
-  late final TextRenderer h2Renderer;
-  late final TextRenderer h3Renderer;
-  late final TextRenderer h4Renderer;
-  late final TextRenderer h5Renderer;
-  late final TextRenderer h6Renderer;
-  late final CodeBlockRenderer codeBlockRenderer;
-  late final OrderedListRenderer orderedListRenderer;
-  late final UnorderedListRenderer unorderedListRenderer;
-  late final BlockQuoteRenderer blockQuoteRenderer;
-  late final ImageRenderer imageRenderer;
+  Renderers._internal({
+    required this.textRenderer,
+    required this.h1Renderer,
+    required this.h2Renderer,
+    required this.h3Renderer,
+    required this.h4Renderer,
+    required this.h5Renderer,
+    required this.h6Renderer,
+    required this.codeBlockRenderer,
+    required this.orderedListRenderer,
+    required this.unorderedListRenderer,
+    required this.blockQuoteRenderer,
+    required this.imageRenderer,
+  });
 }

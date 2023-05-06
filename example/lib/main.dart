@@ -44,8 +44,8 @@ class Demo extends StatelessWidget {
               child: SafeArea(
                 child: Material(
                   child: DraftView(
-                    rawDraftData: data2,
-                    draftViewTheme: const DraftViewTheme(
+                    rawData: data2,
+                    theme: const DraftViewTheme(
                       textStyle: TextStyle(
                           fontSize: 14, color: Colors.black, height: 1.5),
                       boldStyle: TextStyle(
@@ -74,14 +74,39 @@ class Demo extends StatelessWidget {
                         color: Colors.black,
                         height: 1.5,
                       ),
-                      h1Style: TextStyle(fontSize: 26, color: Colors.black, fontWeight: FontWeight.bold),
-                      h2Style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-                      h3Style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-                      h4Style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-                      h5Style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-                      h6Style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-                      codeStyle: TextStyle(fontSize: 13, fontFamily: 'mono', fontWeight: FontWeight.w300, color: Colors.black),
-                      blockquoteStyle: TextStyle(fontSize: 14, color: Colors.black, fontStyle: FontStyle.italic),
+                      h1Style: TextStyle(
+                          fontSize: 26,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                      h2Style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                      h3Style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                      h4Style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                      h5Style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                      h6Style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                      codeStyle: TextStyle(
+                          fontSize: 13,
+                          fontFamily: 'mono',
+                          fontWeight: FontWeight.w300,
+                          color: Colors.black),
+                      blockquoteStyle: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontStyle: FontStyle.italic),
                       linkColor: Colors.green,
                     ),
                     context: context,

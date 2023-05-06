@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:draft_view/models.dart';
-import 'package:draft_view/renderers/text.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
+
+import 'renderers.dart';
 
 abstract class Renderer {
   InlineSpan render(DraftBlock block);
@@ -12,14 +13,13 @@ abstract class Renderer {
 abstract class ListRenderer extends Renderer {
   final TextRenderer textRenderer;
   final int indent;
-
   final Map<int, int> indentMap = {0: 1};
-
   ListRenderer(this.textRenderer, this.indent);
 
   Tuple2<String, int> getIndent(DraftBlock block) {
     int index;
-    int maxDepth = indentMap.keys.reduce((value, element) => max(value, element));
+    int maxDepth =
+        indentMap.keys.reduce((value, element) => max(value, element));
     if (block.depth > maxDepth) {
       //depth increased
       indentMap[block.depth] = 1;

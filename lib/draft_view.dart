@@ -1,8 +1,9 @@
 import 'dart:math';
 
-import 'package:draft_view/models.dart';
-import 'package:draft_view/theme.dart';
 import 'package:flutter/material.dart';
+
+import 'models.dart';
+import 'theme.dart';
 
 class DraftView extends StatelessWidget {
   static const urlRegex =
@@ -12,28 +13,28 @@ class DraftView extends StatelessWidget {
 
   ///Root span. All rendered spans will be this span's children
   late final InlineSpan _rootSpan;
+  late final Renderers _renderers;
 
   ///Input json data
-  final Map<String, dynamic> rawDraftData;
+  final Map<String, dynamic> rawData;
 
   ///Theme
-  final DraftViewTheme draftViewTheme;
-
-  late final Renderers _renderers;
+  final DraftViewTheme theme;
 
   DraftView({
     Key? key,
     required BuildContext context,
-    required this.rawDraftData,
-    required this.draftViewTheme,
+    required this.rawData,
+    required this.theme,
     Function(String url, Map<String, dynamic> data)? onTapLink,
     Function(String url)? onTapImage,
     Widget Function(String url)? imageBuilder,
     WidgetSpan Function(InlineSpan span)? blockquoteBuilder,
     WidgetSpan Function(InlineSpan span)? codeBlockBuilder,
   }) : super(key: key) {
-    _renderers = draftViewTheme.buildRenderers(
+    _renderers = Renderers.fromTheme(
       context: context,
+      theme: theme,
       onTapLink: onTapLink,
       onTapImage: onTapImage,
       imageBuilder: imageBuilder,
@@ -45,7 +46,7 @@ class DraftView extends StatelessWidget {
 
   List<InlineSpan> _generateSpans() {
     List<InlineSpan> result = [];
-    DraftTree draftNode = DraftTree.fromJson(rawDraftData);
+    DraftTree draftNode = DraftTree.fromJson(rawData);
     _recognizePlainUrls(draftNode);
     _recognizeMentionAndTags(draftNode);
     result.addAll(draftNode.blocks
@@ -65,7 +66,12 @@ class DraftView extends StatelessWidget {
   void _recognizePlainUrls(DraftTree draftNode) {
     List<DraftBlock> blocks = draftNode.blocks;
     Map<String, EntityData> entityMap = draftNode.entityMap;
-    int maxKey = entityMap.keys.isEmpty ? 0 : entityMap.keys.map((e) => int.tryParse(e)).whereType<int>().reduce((value, element) => max(value, element));
+    int maxKey = entityMap.keys.isEmpty
+        ? 0
+        : entityMap.keys
+            .map((e) => int.tryParse(e))
+            .whereType<int>()
+            .reduce((value, element) => max(value, element));
     int newKey = maxKey + 1;
     for (DraftBlock block in blocks) {
       var allMatches = RegExp(urlRegex).allMatches(block.text);
@@ -81,7 +87,13 @@ class DraftView extends StatelessWidget {
         }
         if (!exist) {
           Entity entity = Entity(match.start, match.end - match.start, newKey);
-          entity.data = EntityData("LINK", "MUTABLE", {'url': match.input.substring(match.start, match.end)});
+          entity.data = EntityData(
+            "LINK",
+            "MUTABLE",
+            {
+              'url': match.input.substring(match.start, match.end),
+            },
+          );
           block.entityRanges.add(entity);
           newKey++;
         }
@@ -97,7 +109,8 @@ class DraftView extends StatelessWidget {
         Iterable<RegExpMatch> allMatches = reg.allMatches(block.text);
         for (RegExpMatch match in allMatches) {
           // block.inlineStyleRanges.add(InlineStyle(match.start, match.end - match.start, "BOLD"));
-          block.inlineStyleRanges.add(InlineStyle(match.start, match.end - match.start, "HIGHLIGHTED"));
+          block.inlineStyleRanges.add(
+              InlineStyle(match.start, match.end - match.start, "HIGHLIGHTED"));
         }
       }
     }
@@ -132,13 +145,13 @@ class DraftView extends StatelessWidget {
           }
           break;
         }
-      case BlockType.ordered_list_item:
+      case BlockType.orderedListItem:
         {
           span = _renderers.orderedListRenderer.render(e);
           // _orderedListRenderer.index++;
           break;
         }
-      case BlockType.unordered_list_item:
+      case BlockType.unorderedListItem:
         {
           span = _renderers.unorderedListRenderer.render(e);
           break;
@@ -148,7 +161,7 @@ class DraftView extends StatelessWidget {
           span = _renderers.blockQuoteRenderer.render(e);
           break;
         }
-      case BlockType.code_block:
+      case BlockType.codeBlock:
         {
           span = _renderers.codeBlockRenderer.render(e);
           break;
@@ -185,10 +198,11 @@ class DraftView extends StatelessWidget {
         }
       case BlockType.unknown:
         {
-          span = _renderers.textRenderer.render(DraftBlock("key", "<unknown>", "", 0, [], []));
+          span = _renderers.textRenderer
+              .render(DraftBlock("key", "<unknown>", "", 0, [], []));
           break;
         }
-      case BlockType.unstyled:
+      case BlockType.unStyled:
       case BlockType.paragraph:
       default:
         {
@@ -196,20 +210,18 @@ class DraftView extends StatelessWidget {
           break;
         }
     }
-    if (e.type != BlockType.ordered_list_item) {
+    if (e.type != BlockType.orderedListItem) {
       _renderers.orderedListRenderer.resetIndex();
     }
     return span;
   }
 
   InlineSpan _newlineSpan() {
-    return TextSpan(text: "\n", style: draftViewTheme.textStyle);
+    return TextSpan(text: "\n", style: theme.textStyle);
   }
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: _rootSpan,
-    );
+    return Text.rich(_rootSpan);
   }
 }

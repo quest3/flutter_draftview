@@ -1,14 +1,17 @@
 import 'package:draft_view/models.dart';
-import 'package:draft_view/renderers/base.dart';
-import 'package:draft_view/renderers/text.dart';
 import 'package:flutter/material.dart';
+
+import 'renderers.dart';
 
 class BlockQuoteRenderer extends Renderer {
   final TextRenderer _textRenderer;
   final BuildContext _context;
   final WidgetSpan Function(InlineSpan span)? blockquoteBuilder;
-
-  BlockQuoteRenderer(this._context, this._textRenderer, {this.blockquoteBuilder});
+  BlockQuoteRenderer(
+    this._context,
+    this._textRenderer, {
+    this.blockquoteBuilder,
+  });
 
   @override
   InlineSpan render(DraftBlock block) {
@@ -25,9 +28,7 @@ class BlockQuoteRenderer extends Renderer {
           ),
           child: Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: RichText(
-              text: _textRenderer.render(block),
-            ),
+            child: RichText(text: _textRenderer.render(block)),
           ),
         ),
       );
